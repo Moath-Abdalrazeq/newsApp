@@ -29,27 +29,50 @@ function App() {
 
   if (!user) {
     return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerTitle: () => <Header name="Live News Map" />,
+              headerStyle: {
+                height: 150,
+                borderBottomLeftRadius: 50,
+                borderBottomRightRadius: 50,
+                backgroundColor: "#1048FF",
+                elevation: 25,
+                shadowColor: "#000",
+              },
+            }}
+          />
+          <Stack.Screen
+            name="Registration"
+            component={Registration}
+            options={{
+              headerTitle: () => <Header name="Live News Map" />,
+              headerStyle: {
+                height: 150,
+                borderBottomLeftRadius: 50,
+                borderBottomRightRadius: 50,
+                backgroundColor: "#1048FF",
+                elevation: 25,
+                shadowColor: "#000",
+              },
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+  return (
+    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Login"
-          component={Login}
+          name="Dashboard"
+          component={Dashboard}
           options={{
-            headerTitle: () => <Header name="Live News Map" />,
-            headerStyle: {
-              height: 150,
-              borderBottomLeftRadius: 50,
-              borderBottomRightRadius: 50,
-              backgroundColor: "#1048FF",
-              elevation: 25,
-              shadowColor: "#000",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="Registration"
-          component={Registration}
-          options={{
-            headerTitle: () => <Header name="Live News Map" />,
+            headerTitle: () => <Header name="Dashboard" />,
             headerStyle: {
               height: 150,
               borderBottomLeftRadius: 50,
@@ -61,33 +84,10 @@ function App() {
           }}
         />
       </Stack.Navigator>
-    );
-  }
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{
-          headerTitle: () => <Header name="Dashboard" />,
-          headerStyle: {
-            height: 150,
-            borderBottomLeftRadius: 50,
-            borderBottomRightRadius: 50,
-            backgroundColor: "#1048FF",
-            elevation: 25,
-            shadowColor: "#000",
-          },
-        }}
-      />
-    </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 export default () => {
-  return (
-    <NavigationContainer>
-      <App />
-    </NavigationContainer>
-  );
-}
+  return <App />;
+};

@@ -15,7 +15,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  loginUser = async (email, password) => {
+  const loginUser = async (email, password) => {
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
@@ -23,26 +23,25 @@ const Login = () => {
     }
   };
 
-  //forget password
-  const forgotPassword =() => {
-   
-      firebase.auth().sendPasswordResetEmail(email)
-      .then(()=>{
-        alert("Password reset email sent to your email")
-      }).catch((error)=>{
-        alert(error)
+  const forgotPassword = () => {
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(() => {
+        alert("Password reset email sent to your email");
       })
-   
-  
+      .catch((error) => {
+        alert("Please write your email address");
+      });
   };
+
   return (
-    
     <View style={styles.container}>
- 
-     
-      <Image source={require('../images/Logo.png')} style={styles.logo} />
-   
-      <Text style={{ fontWeight: "bold", fontSize: 26,marginTop: 20  }}>Login Page</Text>
+      <Image
+        source={require("../images/Logo.png")}
+        style={styles.logo}
+      />
+      <Text style={{ fontWeight: "bold", fontSize: 26, marginTop: 20 }}>
+        Login
+      </Text>
       <View style={{ marginTop: 40 }}>
         <TextInput
           style={styles.textInput}
@@ -76,18 +75,17 @@ const Login = () => {
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => forgotPassword() }
+        onPress={() => forgotPassword()}
         style={{ marginTop: 20 }}
       >
         <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-          Forget Password?
+          Forgot Password?
         </Text>
       </TouchableOpacity>
-      
     </View>
   );
- 
-  }
+};
+
 export default Login;
 
 const styles = StyleSheet.create({
@@ -107,22 +105,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    marginTop:50,
-    height:70,
-    width:250,
-    backgroundColor:"#026efd",
-    justifyContent:"center",
-    alignItems:"center",
-    borderRadius:50,
+    marginTop: 50,
+    height: 70,
+    width: 250,
+    backgroundColor: "#026efd",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
   },
   logo: {
     marginTop: -40,
-   
-   
     width: 200,
     height: 200,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
-
-
 });

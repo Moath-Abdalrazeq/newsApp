@@ -8,39 +8,46 @@ import {
 import { firebase } from "../config";
 
 const Dashboard = () => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
 
-  // change the password
-  const changePassword =()=>{
-    firebase.auth().sendPasswordResetEmail(firebase.auth().currentUser.email)
-    .then(() => {
+  // Change the password
+  const changePassword = () => {
+    firebase
+      .auth()
+      .sendPasswordResetEmail(firebase.auth().currentUser.email)
+      .then(() => {
         alert("Password reset email sent successfully");
-      }).catch((error)=>{
-        alert(error);
       })
-  }
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   useEffect(() => {
     const currentUser = firebase.auth().currentUser;
     if (currentUser) {
-      firebase.firestore().collection('users')
-      .doc(currentUser.uid)
-      .get()
-      .then((snapshot) => {
-        if (snapshot.exists) {
-          setName(snapshot.data());
-        } else {
-          console.log("User does not exist");
-        }
-      })
-      .catch((error) => {
-        console.error("Error getting user data:", error);
-      });
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(currentUser.uid)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.exists) {
+            setName(snapshot.data());
+          } else {
+            console.log("User does not exist");
+          }
+        })
+        .catch((error) => {
+          console.error("Error getting user data:", error);
+        });
     }
   }, []);
 
   const handleSignOut = () => {
-    firebase.auth().signOut()
+    firebase
+      .auth()
+      .signOut()
       .then(() => {
         console.log("User signed out successfully");
       })
@@ -51,22 +58,24 @@ const Dashboard = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+      <Text style={{ fontSize: 20, fontWeight: "bold" }}>
         Hello, {name.firstName}
       </Text>
       <TouchableOpacity
-        onPress={()=>{
+        onPress={() => {
           changePassword();
         }}
         style={styles.button}
       >
-        <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Change Password</Text>
+        <Text style={{ fontSize: 22, fontWeight: "bold" }}>
+          Change Password
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={handleSignOut}
         style={styles.button}
       >
-        <Text style={{ fontSize: 22, fontWeight: 'bold' }}>Sign Out</Text>
+        <Text style={{ fontSize: 22, fontWeight: "bold" }}>Sign Out</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
