@@ -19,7 +19,7 @@ const Login = () => {
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
-      alert(error.message);
+      alert('Please fill your email and password');
     }
   };
 
@@ -28,7 +28,7 @@ const Login = () => {
       .then(() => {
         alert("Password reset email sent to your email");
       })
-      .catch((error) => {
+      .catch(() => {
         alert("Please write your email address");
       });
   };
@@ -63,7 +63,7 @@ const Login = () => {
         onPress={() => loginUser(email, password)}
         style={styles.button}
       >
-        <Text style={{ fontWeight: "bold", fontSize: 22 }}>Login</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 22 ,  color:'white'}}>Login</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 100,
   },
+ 
   textInput: {
     paddingTop: 20,
     paddingBottom: 10,
