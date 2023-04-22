@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import {
+  Keyboard,
+  SafeAreaView,
+  KeyboardAvoidingView,
   View,
   Text,
   TouchableOpacity,
   TextInput,
   Image,
   StyleSheet,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../config";
@@ -19,12 +24,14 @@ const Login = () => {
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
-      alert('Please fill your email and password');
+      alert("Please fill your email and password");
     }
   };
 
   const forgotPassword = () => {
-    firebase.auth().sendPasswordResetEmail(email)
+    firebase
+      .auth()
+      .sendPasswordResetEmail(email)
       .then(() => {
         alert("Password reset email sent to your email");
       })
@@ -34,67 +41,81 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        source={require("../images/Logo.png")}
-        style={styles.logo}
-      />
-      <Text style={{ fontWeight: "bold", fontSize: 26, marginTop: 20 }}>
-        Login
-      </Text>
-      <View style={{ marginTop: 40 }}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Email"
-          onChangeText={(email) => setEmail(email)}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Password"
-          onChangeText={(password) => setPassword(password)}
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={true}
-        />
-      </View>
-      <TouchableOpacity
-        onPress={() => loginUser(email, password)}
-        style={styles.button}
-      >
-        <Text style={{ fontWeight: "bold", fontSize: 22 ,  color:'white'}}>Login</Text>
-      </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.root}>
+        <SafeAreaView style={styles.safeAreaView}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.content}
+          >
+            <View style={styles.center}>
+              <Image
+                source={require("../images/Logo.png")}
+                style={styles.logo}
+              />
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Email"
+                  onChangeText={(email) => setEmail(email)}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Password"
+                  onChangeText={(password) => setPassword(password)}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  secureTextEntry={true}
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() => forgotPassword()}
+                style={{ marginTop: 5 }}
+              >
+                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                  Forgot Password?
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => loginUser(email, password)}
+                style={styles.button}
+              >
+                <Text
+                  style={{ fontWeight: "bold", fontSize: 22, color: "white" }}
+                >
+                  Login
+                </Text>
+              </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Registration")}
-        style={{ marginTop: 20 }}
-      >
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-          Don't have an account? Register Now
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => forgotPassword()}
-        style={{ marginTop: 20 }}
-      >
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-          Forgot Password?
-        </Text>
-      </TouchableOpacity>
-    </View>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Registration")}
+                style={{ marginTop: 20 }}
+              >
+                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                  Don't have an account? Register Now
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 export default Login;
 
 const styles = StyleSheet.create({
-  container: {
+  center: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    marginTop: 100,
   },
- 
+  form: {
+    marginTop: 20,
+  },
   textInput: {
     paddingTop: 20,
     paddingBottom: 10,
@@ -106,7 +127,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    marginTop: 50,
+    marginTop: 20,
     height: 70,
     width: 250,
     backgroundColor: "#026efd",
@@ -115,9 +136,21 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   logo: {
-    marginTop: -40,
+    marginTop: -60,
     width: 200,
     height: 200,
     resizeMode: "contain",
+  },
+  root: {
+    flex: 1,
+  },
+  safeAreaView: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 32,
   },
 });
