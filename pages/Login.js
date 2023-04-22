@@ -10,7 +10,7 @@ import {
   Image,
   StyleSheet,
   TouchableWithoutFeedback,
-  ScrollView,
+ 
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../config";
