@@ -3,15 +3,9 @@ import {View,Text,SafeAreaView,TouchableOpacity,StyleSheet,} from "react-native"
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { firebase } from "../config";
-
+import HomeScreen from "./HomeScreen";
 const Drawer = createDrawerNavigator();
-function HomeScreen() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={{ fontSize: 20, fontWeight: "bold" }}>Home Page </Text>
-    </SafeAreaView>
-  );
-}
+ 
 export default function Menu() {
   const handleSignOut = () => {
     firebase
