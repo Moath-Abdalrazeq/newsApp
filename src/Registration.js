@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   View,
   Text,
@@ -45,7 +46,7 @@ const Registration = () => {
   return (
     <View style={styles.container}>
       <Text style={{ fontWeight: "bold", fontSize: 23 }}>
-        Sign Up Page
+        Sign Up 
       </Text>
       <View style={{ marginTop: 40 }}>
         <TextInput
@@ -80,7 +81,7 @@ const Registration = () => {
         onPress={() => registerUser(email, password, firstName, lastName)}
         style={styles.button}
       >
-        <Text style={{ fontWeight: "bold", fontSize: 22 }}>Register</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 22 ,   color:'white'}}>Register</Text>
       </TouchableOpacity>
     </View>
   );
