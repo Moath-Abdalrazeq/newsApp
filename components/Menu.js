@@ -3,10 +3,10 @@ import {View,Text,SafeAreaView,TouchableOpacity,StyleSheet,} from "react-native"
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { firebase } from "../config";
-import HomeScreen from "./HomeScreen";
+
 const Drawer = createDrawerNavigator();
  
-export default function Menu() {
+export default function Menu({ navigation }) {
   const handleSignOut = () => {
     firebase
       .auth()
@@ -34,7 +34,7 @@ export default function Menu() {
       drawerContent={({ navigation }) => (
         <View style={{ flex: 1, paddingTop: 20 }}>
 
-          <TouchableOpacity style={{ marginBottom: 20 , paddingTop: 20 }}onPress={() => navigation.navigate("HomeScreen")}>
+          <TouchableOpacity style={{ marginBottom: 20 , paddingTop: 20 }}onPress={() => navigation.navigate("")}>
             <FontAwesome5 name="home" size={24} color="black" style={{  marginLeft: 10 }}>   
               <Text style={{ fontSize: 20 }}>Home</Text> 
             </FontAwesome5>
@@ -85,14 +85,7 @@ export default function Menu() {
         </View>
       )}
     >
-      <Drawer.Screen name="HomeScreen" component={HomeScreen} />
     </Drawer.Navigator>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    marginTop: 100,
-  },
-});
+ 
