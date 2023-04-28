@@ -18,26 +18,49 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
- firebase.firestore();
-
+firebase.firestore();
 
 const AddNews = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [image, setImage] = useState(null);
+  const [source, setSource] = useState('');
 
-  const handleSubmit = () => {
-    const newsRef = firebase.firestore().collection('news');
-    const newNews = {
-      title: title,
-      description: description,
+  const handleChoosePhoto = () => {
+    const options = {
+      noData: true,
     };
-    newsRef.add(newNews).then(() => {
-      setTitle('');
-      setDescription('');
-      Alert.alert('News added successfully!');
-    })
-    .catch((error) => {
-      Alert.alert('Error adding news: ', error);
+    ImagePicker.launchImageLibrary(options, response => {
+      if (response.uri) {
+        setImage(response);
+      }
+    });
+  };
+
+  const handleSubmit = async () => {
+    const newsRef = firebase.firestore().collection('news');
+    const storageRef = firebase.storage().ref(`news/${image.fileName}`);
+    const response = await fetch(image.uri);
+    const blob = await response.blob();
+    const uploadTask = storageRef.put(blob);
+    uploadTask.on('state_changed', null, error => console.error(error), async () => {
+      const downloadURL = await storageRef.getDownloadURL();
+      const newNews = {
+        title: title,
+        description: description,
+        image: downloadURL,
+        source: source,
+      };
+      newsRef.add(newNews).then(() => {
+        setTitle('');
+        setDescription('');
+        setImage(null);
+        setSource('');
+        Alert.alert('News added successfully!');
+      })
+      .catch((error) => {
+        Alert.alert('Error adding news: ', error);
+      });
     });
   };
 
@@ -47,7 +70,17 @@ const AddNews = () => {
       <TextInput style={styles.input} value={title} onChangeText={(text) => setTitle(text)} />
       <Text style={styles.label}>Description:</Text>   
       <TextInput style={[styles.input, styles.descriptionInput]} value={description} onChangeText={(text) => setDescription(text)} multiline />
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+      <TouchableOpacity style={styles.button} onPress={handleChoosePhoto}>
+        <Text style={styles.buttonText}>Choose Photo</Text>
+      </TouchableOpacity>
+      {image && (
+        <View>
+          <Image source={{ uri: image.uri }} style={{ width: 200, height: 200 }} />
+        </View>
+      )}
+      <Text style={styles.label}>Source:</Text>   
+      <TextInput style={styles.input} value={source} onChangeText={(text) => setSource(text)} />
+      <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={!image}>
         <Text style={styles.buttonText}>Add News</Text>
       </TouchableOpacity>
     </View>
