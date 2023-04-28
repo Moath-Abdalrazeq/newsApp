@@ -1,18 +1,17 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import {StyleSheet , View, Text , Button} from 'react-native'
+import { StyleSheet, View, Text, Button } from "react-native";
 import React, { useState, useEffect } from "react";
 import { firebase } from "./config";
 import Login from "./pages/Login";
 import Registration from "./pages/Registration";
-import Menu from "./components/Menu";
 import Header from "./components/Header";
-import * as Location from 'expo-location'
-import { Linking } from 'react-native';
-
-
+import "firebase/firestore";
+import * as Location from "expo-location";
+import { Linking } from "react-native";
+import ClientScreen from "./components/ClientScreen";
 const Stack = createStackNavigator();
-
+import LatestNews from './components/LatestNews'
 function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
@@ -20,42 +19,37 @@ function LocationDeniedScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Please grant location access to use this app.</Text>
-      <Button title="Open Location Settings" onPress={handleOpenLocationSettings} />
+      <Text style={styles.text}>
+        Please grant location access to use this app.
+      </Text>
+      <Button
+        title="Open Location Settings"
+        onPress={handleOpenLocationSettings}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 18,
-    marginBottom: 20,
-  },
-});
 
 function App() {
   const [location, setLocation] = useState({});
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
-  const [showLocationDeniedScreen, setShowLocationDeniedScreen] = useState(false);
+  const [showLocationDeniedScreen, setShowLocationDeniedScreen] = useState(
+    false
+  );
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== "granted") {
         setShowLocationDeniedScreen(true);
         return;
       }
-      const loc = await Location.getCurrentPositionAsync()
-      console.log(loc)
-      setLocation(loc)
-    })()
-  }, [])
+      const loc = await Location.getCurrentPositionAsync();
+
+      setLocation(loc);
+    })();
+  }, []);
 
   function onAuthStateChanged(user) {
     setUser(user);
@@ -110,24 +104,30 @@ function App() {
         </Stack.Navigator>
       </NavigationContainer>
     );
-  }
-  return (
-    <NavigationContainer>
-      <Stack.Navigator> 
-        <Stack.Screen name="Menu" component={Menu}
-        options={{
-          headerStyle: {
-            height: 50,
-            backgroundColor: "white",
-            elevation: 25,
-          },
-        }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  } 
+    return (
+      <NavigationContainer>
+        <Stack.Navigator  >
+          <Stack.Screen name="ClientScreen" component={ClientScreen} />
+          <Stack.Screen name="LatestNews" component={LatestNews} />
+          <Stack.Screen name="Map" component={Map} />
+
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+ 
+
 }
 
-export default () => {
-  return <App />;
-};
+export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+});

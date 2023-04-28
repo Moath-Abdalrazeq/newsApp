@@ -1,51 +1,47 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
-} from "react-native";
+import {View,KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback,Keyboard,Text,  TouchableOpacity,  TextInput,  StyleSheet} from "react-native";
 import { firebase } from "../config";
+import { Picker } from "@react-native-picker/picker";
 
-const Registration = () => {
+const Registration = ( ) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const registerUser = async (email, password, firstName, lastName) => {
-    await firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        firebase.auth().currentUser.sendEmailVerification({
-            handleCodeInApp: true,
-            url: "https://newsapp-32049.firebaseapp.com",
-          })
-          .then(() => {
-            alert("Verification Email sent");
-          }).catch((error) => {
-            alert(error.message);
-          })
-          .then(() => {
-            firebase.firestore().collection("users")
-              .doc(firebase.auth().currentUser.uid)
-              .set({
-                firstName,
-                lastName,
-                email,
-              });
-          })
-          .catch((error) => {
-            alert(error.message);
-          });
-      })
-      .catch((error => {
-        alert(error.message);
-      }));
+  const [role, setRole] = useState("client");
+
+  const registerUser = async () => {
+    try {
+      const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      await userCredential.user.sendEmailVerification({
+        handleCodeInApp: true,
+        url: "https://newsapp-32049.firebaseapp.com",
+      });
+      await firebase.firestore().collection("users").doc(userCredential.user.uid).set({
+        firstName,
+        lastName,
+        email,
+        role, 
+      });
+      alert("Verification Email sent");
+ 
+   
+    } catch (error) {
+      alert(error.message);
+    }
   };
+  
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <View style={styles.root}>
+      <SafeAreaView style={styles.safeAreaView}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.content}
+        >
     <View style={styles.container}>
       <Text style={{ fontWeight: "bold", fontSize: 23 }}>
-        Sign Up 
+        Sign Up
       </Text>
       <View style={{ marginTop: 40 }}>
         <TextInput
@@ -75,14 +71,28 @@ const Registration = () => {
           autoCorrect={false}
           secureTextEntry={true}
         />
+        <Picker
+          selectedValue={role}
+          style={{ height: 50, width: 400 , marginTop: -40 , marginBottom:20 }}
+          onValueChange={(itemValue) =>
+            setRole(itemValue)
+          }>
+          <Picker.Item label="Client" value="client" />
+          <Picker.Item label="Journalist" value="journalist" />
+           
+        </Picker>
       </View>
       <TouchableOpacity
-        onPress={() => registerUser(email, password, firstName, lastName)}
+        onPress={registerUser}
         style={styles.button}
       >
-        <Text style={{ fontWeight: "bold", fontSize: 22 ,   color:'white'}}>Register</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 22, color:'white' }}>Register</Text>
       </TouchableOpacity>
     </View>
+    </KeyboardAvoidingView>
+        </SafeAreaView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -105,13 +115,24 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    marginTop:50,
-    height:70,
-    width:250,
-    backgroundColor:"#026efd",
-    justifyContent:"center",
-    alignItems:"center",
-    borderRadius:50,
-  }
-
+    marginTop:120,
+    height: 70,
+    width: 250,
+    backgroundColor: "#026efd",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
+  },
+  root: {
+    flex: 1,
+  },
+  safeAreaView: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 32,
+  },
 });
