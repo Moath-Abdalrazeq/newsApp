@@ -2,7 +2,7 @@
 import * as React from "react";
 import {View,Text,SafeAreaView,TouchableOpacity,StyleSheet,} from "react-native";
  
-import HomeScreen from "./HomeScreen";
+import HomeScreen from "./LatestNews";
  
 export default function JournalistScreen() {
    

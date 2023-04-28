@@ -21,19 +21,22 @@ const HomeScreen = (props) => {
 
                 <View style={{ padding: 20 }}>
                     {/*    title */}
-                    <Text style={styles.title}> {props.title} </Text>
+                    <Text style={styles.title}> الاحتلال يتأهب.. إغلاق الضفة وغزة حتى الأربعاء </Text>
 
                     {/*    description */}
-                    <Text style={styles.description} numberOfLines={3}>{props.description}</Text>
+                    <Text style={styles.description} numberOfLines={3}>بيت لحم- معا- أعلنت سلطات الاحتلال، فرض الإغلاق الشامل على الضفة وغزة، بدءا من مساء اليوم الإثنين حتى منتصف ليل الأربعاء- الخميس المقبل.
+كما اعلنت رفع حالة التأهب وتعزيز قواتها بحوالي 30 ألف شرطي وجندي اسرائيلي سيتم نشرهم بالضفة وفي داخل إسرائيل.
+
+واشار جيش الاحتلال، فإن الإغلاق الشامل جاء لتوفير الحراسة خلال مراسم ما يسمى بـ "إحياء ذكرى الجنود الإسرائيليين القتلى و "الاستقلال".</Text>
 
                     <View style={styles.data}>
-                        <Text style={styles.heading}>by: <Text style={styles.author}>{props.author}</Text></Text>
+                        <Text style={styles.heading}>by: <Text style={styles.author}>Abd_Alrazeeq</Text></Text>
                         <Text style={styles.date}>{moment(props.publishedAt).format("MMM Do YY")}</Text>
                     </View>
 
                     {/*     source */}
                     <View style={{ marginTop: 10 }}>
-                        <Text>source: <Text style={styles.source}>{props.sourceName}</Text></Text>
+                        <Text>source: <Text style={styles.source}>وكالة معا</Text></Text>
                     </View>
                 </View>
             </Pressable>
@@ -55,7 +58,10 @@ const HomeScreen = (props) => {
 
     
 
-                    <Text style={styles.modalDescription}>{props.description}</Text>
+                    <Text style={styles.modalDescription}>بيت لحم- معا- أعلنت سلطات الاحتلال، فرض الإغلاق الشامل على الضفة وغزة، بدءا من مساء اليوم الإثنين حتى منتصف ليل الأربعاء- الخميس المقبل.
+كما اعلنت رفع حالة التأهب وتعزيز قواتها بحوالي 30 ألف شرطي وجندي اسرائيلي سيتم نشرهم بالضفة وفي داخل إسرائيل.
+
+واشار جيش الاحتلال، فإن الإغلاق الشامل جاء لتوفير الحراسة خلال مراسم ما يسمى بـ "إحياء ذكرى الجنود الإسرائيليين القتلى و "الاستقلال".</Text>
 
                     <Pressable style={styles.closeButton} onPress={toggleModal}>
                         <Text style={styles.closeButtonText}>Close</Text>
@@ -126,7 +132,8 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: "rgba(0, 0, 0, 0.5)",
       justifyContent: "center",
-      alignItems: "center"
+      alignItems: "center",
+       
     },
     cardContainer: {
       backgroundColor: "#fff",
@@ -154,5 +161,11 @@ const styles = StyleSheet.create({
     closeButtonText: {
       color: "#fff",
       fontWeight: "bold"
-    }
+    },
+    modalDescription: {
+      fontSize: 20,
+      lineHeight: 24,
+      textAlign: "center",
+      color: "white",
+    },
 })
