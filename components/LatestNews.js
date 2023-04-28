@@ -1,84 +1,107 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Text, Pressable, Image, Modal } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  Image,
+  Modal,
+  ScrollView,
+} from "react-native";
 import moment from "moment";
 
-const HomeScreen = (props) => {
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+const firebaseConfig = {
+  // your firebase config
+};
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const db = firebase.firestore();
+
+const HomeScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [news, setNews] = useState([]);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
+
+  useEffect(() => {
+    const unsubscribe = db
+      .collection("news")
+      .onSnapshot((querySnapshot) => {
+        const news = [];
+        querySnapshot.forEach((doc) => {
+          news.push({ id: doc.id, ...doc.data() });
+        });
+        setNews(news);
+      });
+    return unsubscribe;
+  }, []);
+
   return (
-    <View>
-      <Pressable style={styles.container} onPress={toggleModal}>
-        {/* image */}
-        <Image source={require("../images/1.jpg")} style={styles.image} />
+    <ScrollView>
+      {news.map((item) => (
+        <Pressable
+          key={item.id}
+          style={styles.container}
+          onPress={toggleModal}
+        >
+          {/* image */}
+          <Image source={{ uri: item.image }} style={styles.image} />
 
-        <View style={{ padding: 20 }}>
-          {/*    title */}
-          <Text style={styles.title}>
-            الاحتلال يتأهب.. إغلاق الضفة وغزة حتى الأربعاء
-          </Text>
+          <View style={{ padding: 20 }}>
+            {/*    title */}
+            <Text style={styles.title}>{item.title}</Text>
 
-          {/*    description */}
-          <Text style={styles.description} numberOfLines={3}>
-            بيت لحم- معا- أعلنت سلطات الاحتلال، فرض الإغلاق الشامل على الضفة
-            وغزة، بدءا من مساء اليوم الإثنين حتى منتصف ليل الأربعاء- الخميس
-            المقبل. كما اعلنت رفع حالة التأهب وتعزيز قواتها بحوالي 30 ألف شرطي
-            وجندي اسرائيلي سيتم نشرهم بالضفة وفي داخل إسرائيل. واشار جيش
-            الاحتلال، فإن الإغلاق الشامل جاء لتوفير الحراسة خلال مراسم ما يسمى
-            بـ "إحياء ذكرى الجنود الإسرائيليين القتلى و "الاستقلال".
-          </Text>
-
-          <View style={styles.data}>
-            <Text style={styles.heading}>
-              by: <Text style={styles.author}>Abd_Alrazeeq</Text>
+            {/*    description */}
+            <Text style={styles.description} numberOfLines={3}>
+              {item.description}
             </Text>
-            <Text style={styles.date}>
-              {moment(props.publishedAt).format("MMM Do YY")}
-            </Text>
+
+            <View style={styles.data}>
+              <Text style={styles.heading}>
+                by: <Text style={styles.author}>{item.author}</Text>
+              </Text>
+              <Text style={styles.date}>
+                {moment(item.publishedAt).format("MMM Do YY")}
+              </Text>
+            </View>
+
+            {/*     source */}
+            <View style={{ marginTop: 10 }}>
+              <Text>
+                source: <Text style={styles.source}>{item.source}</Text>
+              </Text>
+            </View>
           </View>
 
-          {/*     source */}
-          <View style={{ marginTop: 10 }}>
-            <Text>
-              source: <Text style={styles.source}>وكالة معا</Text>
-            </Text>
-          </View>
-        </View>
-      </Pressable>
+          {/* Modal */}
+          <Modal
+            animationType="slide"
+            visible={isModalVisible}
+            onRequestClose={toggleModal}
+          >
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>{item.title}</Text>
 
-      {/* Modal */}
-      <Modal
-        animationType="slide"
-        visible={isModalVisible}
-        onRequestClose={toggleModal}
-      >
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>{props.title}</Text>
+              <Image source={{ uri: item.image }} style={styles.modalImage} />
 
-          <Image
-            source={{
-              uri: props.urlToImage,
-            }}
-            style={styles.modalImage}
-          />
+              <Text style={styles.modalDescription}>{item.description}</Text>
 
-          <Text style={styles.modalDescription}>
-            بيت لحم- معا- أعلنت سلطات الاحتلال، فرض الإغلاق الشامل على الضفة
-            وغزة، بدءا من مساء اليوم الإثنين حتى منتصف ليل الأربعاء- الخميس
-            المقبل. كما اعلنت رفع حالة التأهب وتعزيز قواتها بحوالي 30 ألف شرطي
-            وجندي اسرائيلي سيتم نشرهم بالضفة وفي داخل إسرائيل. واشار جيش
-            الاحتلال، فإن الإغلاق الشامل جاء لتوفير الحراسة خلال مراسم ما يسمى
-            بـ "إحياء ذكرى الجنود الإسرائيليين القتلى و "الاستقلال".
-          </Text>
-
-          <Pressable style={styles.closeButton} onPress={toggleModal}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </Pressable>
-        </View>
-      </Modal>
-    </View>
+              <Pressable style={styles.closeButton} onPress={toggleModal}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </Pressable>
+            </View>
+          </Modal>
+        </Pressable>
+      ))}
+    </ScrollView>
   );
 };
 
