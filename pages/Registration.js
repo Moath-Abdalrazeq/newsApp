@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import {View,  Text,  TouchableOpacity,  TextInput,  StyleSheet} from "react-native";
+import {View,KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback,Keyboard,Text,  TouchableOpacity,  TextInput,  StyleSheet} from "react-native";
 import { firebase } from "../config";
 import { Picker } from "@react-native-picker/picker";
 
-const Registration = ({ navigation }) => {
+const Registration = ( ) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -21,23 +21,24 @@ const Registration = ({ navigation }) => {
         firstName,
         lastName,
         email,
-        role,
+        role, 
       });
       alert("Verification Email sent");
-  
-      // Navigate to the appropriate screen based on the selected role
-      if (role === "client") {
-        navigation.replace("ClientScreen");
-      } else if (role === "journalist") {
-        navigation.navigate("JournalistScreen");
-      }
+ 
+   
     } catch (error) {
       alert(error.message);
     }
   };
   
-  
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <View style={styles.root}>
+      <SafeAreaView style={styles.safeAreaView}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.content}
+        >
     <View style={styles.container}>
       <Text style={{ fontWeight: "bold", fontSize: 23 }}>
         Sign Up
@@ -88,6 +89,10 @@ const Registration = ({ navigation }) => {
         <Text style={{ fontWeight: "bold", fontSize: 22, color:'white' }}>Register</Text>
       </TouchableOpacity>
     </View>
+    </KeyboardAvoidingView>
+        </SafeAreaView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -117,5 +122,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 50,
-  }
+  },
+  root: {
+    flex: 1,
+  },
+  safeAreaView: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 32,
+  },
 });

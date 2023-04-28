@@ -9,11 +9,9 @@ import Header from "./components/Header";
 import "firebase/firestore";
 import * as Location from "expo-location";
 import { Linking } from "react-native";
-import User from "./components/User";
 import ClientScreen from "./components/ClientScreen";
-import JournalistScreen from "./components/JournalistScreen";
 const Stack = createStackNavigator();
-
+import LatestNews from './components/LatestNews'
 function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
@@ -32,11 +30,7 @@ function LocationDeniedScreen() {
   );
 }
 
- 
-
 function App() {
- 
-  
   const [location, setLocation] = useState({});
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
@@ -110,18 +104,19 @@ function App() {
         </Stack.Navigator>
       </NavigationContainer>
     );
-  } else  {
+  } 
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login">
-         
+        <Stack.Navigator  >
           <Stack.Screen name="ClientScreen" component={ClientScreen} />
-          <Stack.Screen name="JournalistScreen" component={JournalistScreen} />
+          <Stack.Screen name="LatestNews" component={LatestNews} />
+          <Stack.Screen name="Map" component={Map} />
+
         </Stack.Navigator>
       </NavigationContainer>
     );
  
-  }
+
 }
 
 export default App;
