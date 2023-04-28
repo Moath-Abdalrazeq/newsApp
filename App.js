@@ -10,8 +10,10 @@ import "firebase/firestore";
 import * as Location from "expo-location";
 import { Linking } from "react-native";
 import ClientScreen from "./components/ClientScreen";
+import AddNews from "./components/AddNews";
 const Stack = createStackNavigator();
 import LatestNews from './components/LatestNews'
+
 function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
@@ -111,7 +113,7 @@ function App() {
           <Stack.Screen name="ClientScreen" component={ClientScreen} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
           <Stack.Screen name="Map" component={Map} />
-
+          <Stack.Screen name="AddNews" component={AddNews} />
         </Stack.Navigator>
       </NavigationContainer>
     );

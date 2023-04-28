@@ -5,6 +5,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { firebase } from "../config";
 import LatestNews from './LatestNews'
 import Map from './Map'
+import AddNews from "./AddNews";
 const Drawer = createDrawerNavigator();
  
 export default function Menu() {
@@ -36,7 +37,7 @@ export default function Menu() {
             </FontAwesome5>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ marginBottom: 20 , paddingTop: 20 }} onPress={() => navigation.navigate("")}>
+          <TouchableOpacity style={{ marginBottom: 20 , paddingTop: 20 }} onPress={() => navigation.navigate("AddNews")}>
             <FontAwesome5  name="plus" size={24} color="black" style={{ marginLeft: 10 }}>   
               <Text style={{ fontSize: 20 }}>Add news</Text> 
             </FontAwesome5>
@@ -70,7 +71,7 @@ export default function Menu() {
     >
             <Drawer.Screen name='Latest News' component={LatestNews} />
             <Drawer.Screen name='Map' component={Map} />
-
+            <Drawer.Screen name='AddNews' component={AddNews} />
     </Drawer.Navigator>
   );
 }
