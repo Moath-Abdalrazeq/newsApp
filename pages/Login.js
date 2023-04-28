@@ -1,20 +1,10 @@
 import React, { useState } from "react";
-import {
-  Keyboard,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Image,
-  StyleSheet,
-  TouchableWithoutFeedback,
- 
-} from "react-native";
+import {Keyboard,SafeAreaView,KeyboardAvoidingView,View,Text,
+  TouchableOpacity,TextInput,Image,StyleSheet,TouchableWithoutFeedback,} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../config";
-
+import "firebase/firestore";
+ 
 const Login = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
@@ -22,17 +12,15 @@ const Login = () => {
 
   const loginUser = async (email, password) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+    await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
-      alert("Please fill your email and password");
+      alert("Please fill in your email and password");
     }
   };
 
   const forgotPassword = () => {
-    firebase
-      .auth()
-      .sendPasswordResetEmail(email)
-      .then(() => {
+    firebase.auth().sendPasswordResetEmail(email)
+    .then(() => {
         alert("Password reset email sent to your email");
       })
       .catch(() => {
@@ -94,7 +82,7 @@ const Login = () => {
                 style={{ marginTop: 20 }}
               >
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                  Don't have an account? Register Now
+                  Don't have an account? SignUp Now
                 </Text>
               </TouchableOpacity>
             </View>
