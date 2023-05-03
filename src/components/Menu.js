@@ -2,10 +2,11 @@ import * as React from "react";
 import {View,Text, TouchableOpacity } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { firebase } from "../config";
+import { firebase } from "../../config";
 import LatestNews from './LatestNews'
 import Map from './Map'
 import AddNews from "./AddNews";
+import LiveStraem from './LiveStream'
 const Drawer = createDrawerNavigator();
  
 export default function Menu() {
@@ -43,9 +44,9 @@ export default function Menu() {
             </FontAwesome5>
           </TouchableOpacity>
 
-          <TouchableOpacity style={{ marginBottom: 20 , paddingTop: 20 }} onPress={() => navigation.navigate("")}>
-            <FontAwesome5 name="search" size={24} color="black" style={{  marginLeft: 10 }}>   
-              <Text style={{ fontSize: 20 }}>Search</Text> 
+          <TouchableOpacity style={{ marginBottom: 20 , paddingTop: 20 }} onPress={() => navigation.navigate("LiveStraem")}>
+            <FontAwesome5 name="stream" size={24} color="black" style={{  marginLeft: 10 }}>   
+              <Text style={{ fontSize: 20 }}>Add LiveStream</Text> 
             </FontAwesome5>
           </TouchableOpacity>
 
@@ -72,6 +73,10 @@ export default function Menu() {
             <Drawer.Screen name='Latest News' component={LatestNews} />
             <Drawer.Screen name='Map' component={Map} />
             <Drawer.Screen name='AddNews' component={AddNews} />
+            
+            <Drawer.Screen name='LiveStraem' component={LiveStraem} />
+
+            
     </Drawer.Navigator>
   );
 }

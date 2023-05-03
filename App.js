@@ -3,18 +3,19 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { StyleSheet, View, Text, Button } from "react-native";
 import React, { useState, useEffect } from "react";
 import { firebase } from "./config";
-import Login from "./pages/Login";
-import Registration from "./pages/Registration";
-import Header from "./components/Header";
+import Login from "./src/pages/Login";
+import Registration from "./src/pages/Registration";
+import Header from "./src/components/Header";
 import "firebase/firestore";
 import * as Location from "expo-location";
 import { Linking } from "react-native";
-import ClientScreen from "./components/ClientScreen";
-import AddNews from "./components/AddNews";
+import ClientScreen from "./src/components/ClientScreen";
+import AddNews from "./src/components/AddNews";
 const Stack = createStackNavigator();
-import LatestNews from './components/LatestNews'
-
-function LocationDeniedScreen() {
+import LatestNews from './src/components/LatestNews'
+import LiveStraem from './src/components/LiveStream'
+ 
+ function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
   };
@@ -111,9 +112,11 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator  >
           <Stack.Screen name="ClientScreen" component={ClientScreen} />
-          <Stack.Screen name="LatestNews" component={LatestNews} />
+          <Stack.Screen name="LatestNews" component={LatestNews}   />
           <Stack.Screen name="Map" component={Map} />
-          <Stack.Screen name="AddNews" component={AddNews} />
+          <Stack.Screen name="AddNews" component={AddNews} location={location} />
+          <Stack.Screen name="LiveStraem" component={LiveStraem} />
+
         </Stack.Navigator>
       </NavigationContainer>
     );

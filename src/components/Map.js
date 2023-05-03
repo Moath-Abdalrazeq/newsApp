@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {  StyleSheet,View,Image,Text,TouchableOpacity} from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth'
@@ -21,15 +27,15 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 
 const Map = () => {
- 
-  const [selectedMarker, setSelectedMarker] = useState(false);
+  const [markers, setMarkers] = useState([]);
+  const [selectedMarker, setSelectedMarker] = useState(null);
   const [news, setNews] = useState([]);
 
   const jenin = {
-    latitude: 31.9522,
-    longitude: 35.2332,
-    latitudeDelta: 4,
-    longitudeDelta:4,
+    latitude: 32.4637,
+    longitude: 35.2951,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
   };
 
   const renderPopupCard = () => {
@@ -54,13 +60,12 @@ const Map = () => {
         )}
         <TouchableOpacity
           style={styles.closeButton}
-          onPress={() => setSelectedMarker(false)}
+          onPress={() => setSelectedMarker(null)}
         >
           <Text style={styles.closeButtonText}>Close</Text>
         </TouchableOpacity>
       </View>
     );
-    
   };
 
   useEffect(() => {
