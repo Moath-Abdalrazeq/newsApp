@@ -2,7 +2,7 @@
  import JournalistScreen from "./JournalistScreen";
 import ClientScreen from "./ClientScreen";
 import AdminScreen from "./AdminScreen";
-import { firebase } from "../config";
+import { firebase } from "../../config";
 import "firebase/firestore";
 
  

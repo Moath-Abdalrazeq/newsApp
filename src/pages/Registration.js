@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {View,KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback,Keyboard,Text,  TouchableOpacity,  TextInput,  StyleSheet} from "react-native";
-import { firebase } from "../config";
+import { firebase } from "../../config";
 import { Picker } from "@react-native-picker/picker";
 
 const Registration = ( ) => {

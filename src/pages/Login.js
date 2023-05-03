@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {Keyboard,SafeAreaView,KeyboardAvoidingView,View,Text,
   TouchableOpacity,TextInput,Image,StyleSheet,TouchableWithoutFeedback,} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { firebase } from "../config";
+import { firebase } from "../../config";
 import "firebase/firestore";
  
 const Login = () => {
@@ -38,7 +38,7 @@ const Login = () => {
           >
             <View style={styles.center}>
               <Image
-                source={require("../images/Logo.png")}
+                source={require("../../images/Logo.png")}
                 style={styles.logo}
               />
               <View style={styles.form}>

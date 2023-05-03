@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Pressable,
-  Image,
-  Modal,
-  ScrollView,
-} from "react-native";
+import {View,  StyleSheet,  Text,  Pressable,  Image,Modal,ScrollView,} from "react-native";
 import moment from "moment";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 const firebaseConfig = {
-  // your firebase config
+  apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
+  authDomain: "newsapp-32049.firebaseapp.com",
+  projectId: "newsapp-32049",
+  storageBucket: "newsapp-32049.appspot.com",
+  messagingSenderId: "109848058571",
+  appId: "1:109848058571:web:2e5322e2a1d8251017594e",
+  measurementId: "G-KVL2B1SPCG"
 };
 // Initialize Firebase
 if (!firebase.apps.length) {
@@ -25,22 +23,23 @@ const db = firebase.firestore();
 
 const HomeScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [news, setNews] = useState([]);
+  const [selectedNews, setSelectedNews] = useState({});
 
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
+  const toggleModal = (item) => {
+    setSelectedNews(item);
+    setIsModalVisible(true);
   };
 
+  const [news, setNews] = useState([]);
+
   useEffect(() => {
-    const unsubscribe = db
-      .collection("news")
-      .onSnapshot((querySnapshot) => {
-        const news = [];
-        querySnapshot.forEach((doc) => {
-          news.push({ id: doc.id, ...doc.data() });
-        });
-        setNews(news);
+    const unsubscribe = db.collection("news").onSnapshot((querySnapshot) => {
+      const news = [];
+      querySnapshot.forEach((doc) => {
+        news.push({ id: doc.id, ...doc.data() });
       });
+      setNews(news);
+    });
     return unsubscribe;
   }, []);
 
@@ -50,57 +49,53 @@ const HomeScreen = () => {
         <Pressable
           key={item.id}
           style={styles.container}
-          onPress={toggleModal}
+          onPress={() => toggleModal(item)}
         >
           {/* image */}
-          <Image source={{ uri: item.image }} style={styles.image} />
-
+          <Image source={{ uri: item.mediaUri }} style={styles.image} />
+  
           <View style={{ padding: 20 }}>
             {/*    title */}
             <Text style={styles.title}>{item.title}</Text>
-
+  
             {/*    description */}
             <Text style={styles.description} numberOfLines={3}>
               {item.description}
             </Text>
-
+  
             <View style={styles.data}>
-              <Text style={styles.heading}>
-                by: <Text style={styles.author}>{item.author}</Text>
+              {/*     source */}
+               <Text>
+                source: <Text style={styles.source}>{item.source}</Text>
               </Text>
               <Text style={styles.date}>
                 {moment(item.publishedAt).format("MMM Do YY")}
               </Text>
             </View>
-
-            {/*     source */}
-            <View style={{ marginTop: 10 }}>
-              <Text>
-                source: <Text style={styles.source}>{item.source}</Text>
-              </Text>
-            </View>
           </View>
-
-          {/* Modal */}
-          <Modal
-            animationType="slide"
-            visible={isModalVisible}
-            onRequestClose={toggleModal}
-          >
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>{item.title}</Text>
-
-              <Image source={{ uri: item.image }} style={styles.modalImage} />
-
-              <Text style={styles.modalDescription}>{item.description}</Text>
-
-              <Pressable style={styles.closeButton} onPress={toggleModal}>
-                <Text style={styles.closeButtonText}>Close</Text>
-              </Pressable>
-            </View>
-          </Modal>
         </Pressable>
       ))}
+  
+      {/* Modal */}
+      <Modal visible={isModalVisible} animationType="slide">
+        
+        <View style={styles.modalContainer}>
+          
+          <View style={styles.cardContainer}>
+            <Text style={styles.cardTitle}>{selectedNews.title}</Text>
+            <Image source={{ uri: selectedNews.mediaUri }} style={styles.Modalimage} />
+            <ScrollView style={styles.modalContent}>
+            <Text style={styles.cardDescription}>{selectedNews.description}</Text>
+            </ScrollView>
+            <Pressable
+              style={styles.closeButton}
+              onPress={() => setIsModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -159,42 +154,50 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   modalContainer: {
+   
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
+     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   cardContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
+    width: '100%',
+    height:'100%',
+    borderRadius: 5,
     padding: 20,
-    borderRadius: 10,
-    width: "80%",
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 20,
+    fontWeight: 'bold',
     marginBottom: 10,
+    marginTop:50,
+  },
+  Modalimage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+    marginBottom: 10,
+  
   },
   cardDescription: {
-    fontSize: 16,
-    fontWeight: "400",
+    fontSize: 22,
     lineHeight: 24,
+    marginBottom: 20,
   },
   closeButton: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: "#e63946",
+    backgroundColor: '#333',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
   },
   closeButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
-  modalDescription: {
-    fontSize: 20,
-    lineHeight: 24,
-    textAlign: "center",
-    color: "white",
-  },
+ 
+
+   
+ 
 });
