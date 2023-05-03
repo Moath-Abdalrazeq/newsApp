@@ -14,7 +14,8 @@ import AddNews from "./src/components/AddNews";
 const Stack = createStackNavigator();
 import LatestNews from './src/components/LatestNews'
 import LiveStraem from './src/components/LiveStream'
- 
+import JeninNews from './src/components/JeninNews'
+import NablusNews from './src/components/NablusNews'
  function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
@@ -114,6 +115,8 @@ function App() {
           <Stack.Screen name="ClientScreen" component={ClientScreen} />
           <Stack.Screen name="LatestNews" component={LatestNews}   />
           <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen name="JeninNews" component={JeninNews} />
+          <Stack.Screen name="NablusNews" component={NablusNews} />
           <Stack.Screen name="AddNews" component={AddNews} location={location} />
           <Stack.Screen name="LiveStraem" component={LiveStraem} />
 

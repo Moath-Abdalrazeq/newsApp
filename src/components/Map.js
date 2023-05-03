@@ -1,171 +1,150 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, Modal, Text, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth'
-import 'firebase/compat/firestore'
-const firebaseConfig = {
-  apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
-  authDomain: "newsapp-32049.firebaseapp.com",
-  projectId: "newsapp-32049",
-  storageBucket: "newsapp-32049.appspot.com",
-  messagingSenderId: "109848058571",
-  appId: "1:109848058571:web:2e5322e2a1d8251017594e",
-  measurementId: "G-KVL2B1SPCG"
-};
-// Initialize Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-
-const db = firebase.firestore();
+import { useNavigation } from "@react-navigation/native";
+ 
 
 const Map = () => {
-  const [markers, setMarkers] = useState([]);
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const [news, setNews] = useState([]);
-
+  const navigation = useNavigation();
+const palestine={
+  latitude: 31.9522,
+  longitude: 35.2332,
+  latitudeDelta: 4.5,
+  longitudeDelta: 4.5,
+ 
+}
   const jenin = {
     latitude: 32.4637,
     longitude: 35.2951,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
+    markerTitle: "Jenin",
+    id: "jenin-marker",
+    newsUrl: "JeninNews",
   };
 
-  const renderPopupCard = () => {
-    if (!selectedMarker) {
-      return null;
+  const nablus = {
+    latitude: 32.2226,
+    longitude: 35.2594,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+    markerTitle: "Nablus",
+    id: "nablus-marker",
+    newsUrl: "NablusNews",
+  };
+
+  const handleMarkerPress = (marker) => {
+    setSelectedMarker(marker);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMarker(null);
+  };
+
+  const handleNewsButtonPress = () => {
+    if (selectedMarker) {
+      navigation.navigate(  selectedMarker.newsUrl );
+      setSelectedMarker(null);
     }
-
-    const newsItem = news.find((item) => item.id === selectedMarker.id);
-
-    return (
-      <View style={styles.popupCard}>
-        <Text style={styles.popupCardTitle}>{newsItem.title}</Text>
-        <Text style={styles.popupCardBody}>{newsItem.body}</Text>
-        {newsItem.streamUrl && (
-          <View style={styles.liveStreamContainer}>
-            <Text style={styles.liveStreamTitle}>Live Stream</Text>
-            <Image
-              source={{ uri: newsItem.streamUrl }}
-              style={styles.liveStreamPlayer}
-            />
-          </View>
-        )}
-        <TouchableOpacity
-          style={styles.closeButton}
-          onPress={() => setSelectedMarker(null)}
-        >
-          <Text style={styles.closeButtonText}>Close</Text>
-        </TouchableOpacity>
-      </View>
-    );
   };
-
-  useEffect(() => {
-    const unsubscribe = db.collection("news").onSnapshot((snapshot) => {
-      const fetchedNews = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setNews(fetchedNews);
-    });
-    return () => unsubscribe();
-  }, []);
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} initialRegion={jenin}>
-        {news.map((marker) => (
-          <Marker
-            key={marker.id}
-            coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
-            }}
-            onPress={() => setSelectedMarker(marker)}
-          />
-        ))}
+      <MapView style={styles.map} initialRegion={palestine}>
+        <Marker
+          coordinate={{
+            latitude: jenin.latitude,
+            longitude: jenin.longitude,
+          }}
+          identifier={jenin.id}
+          onPress={() => handleMarkerPress(jenin)}
+        />
+        <Marker
+          coordinate={{
+            latitude: nablus.latitude,
+            longitude: nablus.longitude,
+          }}
+          identifier={nablus.id}
+          onPress={() => handleMarkerPress(nablus)}
+        />
       </MapView>
-      {renderPopupCard()}
+      <Modal visible={!!selectedMarker} animationType="slide">
+  <View style={styles.modal}>
+    <Text style={styles.modalTitle}>{selectedMarker?.markerTitle}</Text>
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.modalButton} onPress={handleNewsButtonPress}>
+        <Text style={styles.modalButtonText}>News</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.modalButton}>
+        <Text style={styles.modalButtonText}>Livestream's</Text>
+      </TouchableOpacity>
+    </View>
+    <TouchableOpacity style={styles.modalCloseButton} onPress={handleCloseModal}>
+      <Text style={styles.modalCloseButtonText}>Close</Text>
+    </TouchableOpacity>
+  </View>
+</Modal>
+
     </View>
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   map: {
     flex: 1,
+    width: '100%',
   },
-  marker: {
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderWidth: 2,
-    borderColor: "#000",
+  modal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 20,
   },
-  markerText: {
-    fontWeight: "bold",
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 20,
   },
-  popupCard: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-    right: 20,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+  modalButton: {
+    backgroundColor: '#2196F3',
+    paddingHorizontal: 40,
+    paddingVertical: 20,
+    borderRadius: 5,
+    marginLeft:40,
+    marginRight:40
+   
+    
+   
   },
-  popupCardTitle: {
-    fontWeight: "bold",
-    marginBottom: 5,
+  modalButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
-  popupCardBody: {
-    fontSize: 12,
-  },
-  liveStreamContainer: {
-    marginTop: 10,
+  modalCloseButton: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginTop: 20,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 5,
+    borderColor: '#2196F3',
   },
-  liveStreamTitle: {
-    fontWeight: "bold",
-    marginBottom: 5,
+  modalCloseButtonText: {
+    color: '#2196F3',
+    fontWeight: 'bold',
   },
-  liveStreamPlayer: {
-    width: "100%",
-    height: 200,
-  },
-  closeButton: {
-    backgroundColor: "#ccc",
-    padding: 5,
-    borderRadius: 5,
-    alignSelf: "flex-end",
-    marginTop: 10,
-  },
-  closeButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
+  buttonContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
+    
   },
 });
 
