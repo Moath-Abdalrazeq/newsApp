@@ -8,6 +8,7 @@ import {
   Image,
   Video,
   StyleSheet,
+  Keyboard 
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "firebase/compat/app";
@@ -104,7 +105,7 @@ const AddNews = () => {
   
  
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onPress={() => Keyboard.dismiss()}>
       <Text style={styles.label}>Title:</Text>
       <TextInput
         style={styles.input}
