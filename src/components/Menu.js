@@ -7,9 +7,10 @@ import LatestNews from './LatestNews'
 import Map from './Map'
 import AddNews from "./AddNews";
 import LiveStraem from './LiveStream'
+import AcceptJournalist from "./AcceptJournalist"
 const Drawer = createDrawerNavigator();
  
-export default function Menu() {
+export default function Menu({ user }) {
   const handleChangePassword = () => {
     firebase
       .auth()
@@ -67,15 +68,23 @@ export default function Menu() {
               <Text style={{ fontSize: 20 }}>Sign Out</Text>
             </FontAwesome5>
           </TouchableOpacity>
+          {user.isAdmin && ( // Check if the user is an admin
+          <TouchableOpacity style={{ marginBottom: 20, paddingTop: 20 }} onPress={() => navigation.navigate("AcceptJournalist")}>
+            <FontAwesome5 name="users" size={24} color="black" style={{ marginLeft: 10 }}>
+              <Text style={{ fontSize: 20 }}>Accept the Journalist</Text>
+            </FontAwesome5>
+          </TouchableOpacity>
+        )}
         </View>
       )}
     >
             <Drawer.Screen name='Latest News' component={LatestNews} />
             <Drawer.Screen name='Map' component={Map} />
             <Drawer.Screen name='AddNews' component={AddNews} />
-            
-            <Drawer.Screen name='LiveStraem' component={LiveStraem} />
+            <Drawer.Screen name='AcceptJournalist' component={AcceptJournalist} />
 
+            <Drawer.Screen name='LiveStraem' component={LiveStraem} />
+         
             
     </Drawer.Navigator>
   );
