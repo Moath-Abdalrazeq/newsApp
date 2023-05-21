@@ -1,138 +1,66 @@
-import React, { useState } from "react";
-import {View,KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback,Keyboard,Text,  TouchableOpacity,  TextInput,  StyleSheet} from "react-native";
-import { firebase } from "../../config";
-import { Picker } from "@react-native-picker/picker";
-
-const Registration = ( ) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [role, setRole] = useState("client");
-
-  const registerUser = async () => {
-    try {
-      const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      await userCredential.user.sendEmailVerification({
-        handleCodeInApp: true,
-        url: "https://newsapp-32049.firebaseapp.com",
-      });
-      await firebase.firestore().collection("users").doc(userCredential.user.uid).set({
-        firstName,
-        lastName,
-        email,
-        role, 
-      });
-      alert("Verification Email sent");
+import React from "react";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
  
-   
-    } catch (error) {
-      alert(error.message);
-    }
+ 
+
+const Stack = createStackNavigator();
+
+const Registration = ({ navigation }) => {
+  const handleClientRegistration = () => {
+    navigation.navigate("ClientRegistration");
   };
-  
+
+  const handleJournalistRegistration = () => {
+    navigation.navigate("JournalistRegistration");
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <View style={styles.root}>
-      <SafeAreaView style={styles.safeAreaView}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.content}
-        >
     <View style={styles.container}>
-      <Text style={{ fontWeight: "bold", fontSize: 23 }}>
-        Sign Up
-      </Text>
-      <View style={{ marginTop: 40 }}>
-        <TextInput
-          style={styles.input}
-          placeholder="First Name"
-          onChangeText={(firstName) => setFirstName(firstName)}
-          autoCorrect={false}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Last Name"
-          onChangeText={(lastName) => setLastName(lastName)}
-          autoCorrect={false}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          onChangeText={(email) => setEmail(email)}
-          autoCorrect={false}
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          onChangeText={(password) => setPassword(password)}
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={true}
-        />
-        <Picker
-          selectedValue={role}
-          style={{ height: 50, width: 400 , marginTop: -40 , marginBottom:20 }}
-          onValueChange={(itemValue) =>
-            setRole(itemValue)
-          }>
-          <Picker.Item label="Client" value="client" />
-          <Picker.Item label="Journalist" value="journalist" />
-           
-        </Picker>
-      </View>
+      <Text style={styles.title}>Registration</Text>
       <TouchableOpacity
-        onPress={registerUser}
+        onPress={handleClientRegistration}
         style={styles.button}
       >
-        <Text style={{ fontWeight: "bold", fontSize: 22, color:'white' }}>Register</Text>
+        <Text style={styles.buttonText}>Register as a Client</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={handleJournalistRegistration}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Register as a Journalist</Text>
       </TouchableOpacity>
     </View>
-    </KeyboardAvoidingView>
-        </SafeAreaView>
-      </View>
-    </TouchableWithoutFeedback>
   );
 };
 
+ 
 export default Registration;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    marginTop: 100,
   },
-  input: {
-    paddingTop: 20,
-    paddingBottom: 10,
-    width: 400,
-    fontSize: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
-    marginBottom: 10,
-    textAlign: "center",
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
   },
   button: {
-    marginTop:120,
-    height: 70,
-    width: 250,
     backgroundColor: "#026efd",
+    width: 200,
+    height: 50,
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 50,
+    marginTop: 20,
   },
-  root: {
-    flex: 1,
-  },
-  safeAreaView: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 32,
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
+
+ 

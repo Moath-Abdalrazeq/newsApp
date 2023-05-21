@@ -1,16 +1,16 @@
-
 import * as React from "react";
-import {View,Text,SafeAreaView,TouchableOpacity,StyleSheet,} from "react-native";
- 
-import HomeScreen from "./LatestNews";
- 
+  import Menu from "./Menu";
+  import { createStackNavigator } from "@react-navigation/stack";
+
+const Stack = createStackNavigator();
+
+  
 export default function JournalistScreen() {
-   
-  return (
-    <> 
-     
- <Text>AAAaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</Text>
-    </>
-  )
+  const user = { isAdmin: false };
+
+  return(       
+    <Menu user={user} />
+
+
+    )  
 }
- 
