@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking } from "react-native";
 import { firebase } from "../../config";
 
 const AdminDashboard = () => {
@@ -72,9 +72,30 @@ const AdminDashboard = () => {
   };
 
   const renderRegistrationItem = (registration) => {
+    const viewCV = async () => {
+      try {
+        const userDoc = await firebase.firestore().collection("users").doc(registration.id).get();
+        const user = userDoc.data();
+
+        if (user.cv) {
+          Linking.openURL(user.cv);
+        } else {
+          alert("CV not available");
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
     return (
       <View style={styles.registrationItem} key={registration.id}>
         <Text style={styles.name}>{`${registration.firstName} ${registration.lastName}`}</Text>
+        <TouchableOpacity
+          style={styles.viewCVButton}
+          onPress={viewCV}
+        >
+          <Text style={styles.viewCVButtonText}>View CV</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={styles.acceptButton}
           onPress={() => acceptRegistration(registration.id)}
@@ -129,6 +150,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 8,
   },
+  viewCVButton: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+  },
   acceptButton: {
     backgroundColor: "#026efd",
     paddingVertical: 8,
@@ -141,6 +168,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 4,
     marginLeft: 8,
+  },
+  viewCVButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
   acceptButtonText: {
     color: "white",
