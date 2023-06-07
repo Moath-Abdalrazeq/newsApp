@@ -8,6 +8,9 @@ import Map from './Map'
 import AddNews from "./AddNews";
 import LiveStraem from './LiveStream'
 import AcceptJournalist from "./AcceptJournalist"
+import AdminAcceptNews from "./AdminAcceptNews"
+
+
 const Drawer = createDrawerNavigator();
  
 export default function Menu({ user }) {
@@ -69,11 +72,18 @@ export default function Menu({ user }) {
             </FontAwesome5>
           </TouchableOpacity>
           {user.isAdmin && ( // Check if the user is an admin
+          <> 
           <TouchableOpacity style={{ marginBottom: 20, paddingTop: 20 }} onPress={() => navigation.navigate("AcceptJournalist")}>
             <FontAwesome5 name="users" size={24} color="black" style={{ marginLeft: 10 }}>
               <Text style={{ fontSize: 20 }}>Accept the Journalist</Text>
             </FontAwesome5>
           </TouchableOpacity>
+          <TouchableOpacity style={{ marginBottom: 20, paddingTop: 20 }} onPress={() => navigation.navigate("AdminAcceptNews")}>
+            <FontAwesome5 name="users" size={24} color="black" style={{ marginLeft: 10 }}>
+              <Text style={{ fontSize: 20 }}>Accept the news</Text>
+            </FontAwesome5>
+          </TouchableOpacity>
+          </>
         )}
         </View>
       )}
@@ -82,7 +92,7 @@ export default function Menu({ user }) {
             <Drawer.Screen name='Map' component={Map} />
             <Drawer.Screen name='AddNews' component={AddNews} />
             <Drawer.Screen name='AcceptJournalist' component={AcceptJournalist} />
-
+            <Drawer.Screen name='AdminAcceptNews' component={AdminAcceptNews} />
             <Drawer.Screen name='LiveStraem' component={LiveStraem} />
          
             
