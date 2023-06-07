@@ -84,12 +84,12 @@ const JournalistRegistration = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.root}>
-        <SafeAreaView style={styles.safeAreaView}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={styles.content}
-          >
+      <SafeAreaView style={styles.safeAreaView}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.content}
+        >
+          <View style={styles.root}>
             <View style={styles.container}>
               <Text style={{ fontWeight: "bold", fontSize: 23 }}>
                 Journalist Sign Up
@@ -157,9 +157,9 @@ const JournalistRegistration = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-          </KeyboardAvoidingView>
-        </SafeAreaView>
-      </View>
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
@@ -167,6 +167,18 @@ const JournalistRegistration = () => {
 export default JournalistRegistration;
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+  safeAreaView: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 32,
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -211,17 +223,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 50,
-  },
-  root: {
-    flex: 1,
-  },
-  safeAreaView: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 32,
   },
 });

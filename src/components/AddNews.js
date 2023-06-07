@@ -1,4 +1,4 @@
-import React, { useState,useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   Image,
   Video,
   StyleSheet,
-  Keyboard 
+  Keyboard
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "firebase/compat/app";
@@ -23,8 +23,9 @@ const firebaseConfig = {
   storageBucket: "newsapp-32049.appspot.com",
   messagingSenderId: "109848058571",
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
-  measurementId: "G-KVL2B1SPCG",
+  measurementId: "G-KVL2B1SPCG"
 };
+
 // Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -57,13 +58,27 @@ const AddNews = () => {
       return;
     }
 
+    const currentUser = firebase.auth().currentUser;
+    const usersRef = firebase.firestore().collection("users").doc(currentUser.uid);
+    const doc = await usersRef.get();
+
+    if (!doc.exists) {
+      alert("User not found.");
+      return;
+    }
+
+    const userRole = doc.data().role;
+    let initialStatus = userRole === "journalist" ? "accepted" : "pending";
+
     const newsRef = firebase.firestore().collection("news");
     const newNews = {
       title: title,
       description: description,
       mediaUri: mediaUri,
-      location: new firebase.firestore.GeoPoint(location.coords.latitude, location.coords.longitude)
+      location: new firebase.firestore.GeoPoint(location.coords.latitude, location.coords.longitude),
+      status: initialStatus // Set the initial status based on user role
     };
+
     newsRef
       .add(newNews)
       .then(() => {
@@ -76,8 +91,6 @@ const AddNews = () => {
         alert("Error adding news: ", error);
       });
   };
-  
-
   
   const handleUploadMedia = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -124,12 +137,12 @@ const AddNews = () => {
         <Text style={styles.buttonText}>Upload Media</Text>
       </TouchableOpacity>
       {mediaUri ? (
-  mediaUri.endsWith(".mov") ? (
-    <Video source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
-  ) : (
-    <Image source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
-  )
-) : null}
+        mediaUri.endsWith(".mov") ? (
+          <Video source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+        ) : (
+          <Image source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+        )
+      ) : null}
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Add News</Text>

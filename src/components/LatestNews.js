@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {View,  StyleSheet,  Text,  Pressable,  Image,Modal,ScrollView,} from "react-native";
+import { View, StyleSheet, Text, Pressable, Image, Modal, ScrollView } from "react-native";
 import moment from "moment";
 
 import firebase from "firebase/compat/app";
@@ -21,7 +21,7 @@ if (!firebase.apps.length) {
 
 const db = firebase.firestore();
 
-const HomeScreen = () => {
+const LatestNews = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedNews, setSelectedNews] = useState({});
 
@@ -33,59 +33,64 @@ const HomeScreen = () => {
   const [news, setNews] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = db.collection("news").onSnapshot((querySnapshot) => {
-      const news = [];
-      querySnapshot.forEach((doc) => {
-        news.push({ id: doc.id, ...doc.data() });
+    const unsubscribe = db
+      .collection("news")
+      .where("status", "==", "accepted")
+      .onSnapshot((querySnapshot) => {
+        const news = [];
+        querySnapshot.forEach((doc) => {
+          news.push({ id: doc.id, ...doc.data() });
+        });
+        setNews(news);
       });
-      setNews(news);
-    });
     return unsubscribe;
   }, []);
 
   return (
     <ScrollView>
-      {news.map((item) => (
-        <Pressable
-          key={item.id}
-          style={styles.container}
-          onPress={() => toggleModal(item)}
-        >
-          {/* image */}
-          <Image source={{ uri: item.mediaUri }} style={styles.image} />
-  
-          <View style={{ padding: 20 }}>
-            {/*    title */}
-            <Text style={styles.title}>{item.title}</Text>
-  
-            {/*    description */}
-            <Text style={styles.description} numberOfLines={3}>
-              {item.description}
-            </Text>
-  
-            <View style={styles.data}>
-              {/*     source */}
-               <Text>
-                source: <Text style={styles.source}>{item.source}</Text>
-              </Text>
-              <Text style={styles.date}>
-                {moment(item.publishedAt).format("MMM Do YY")}
-              </Text>
-            </View>
-          </View>
-        </Pressable>
-      ))}
-  
+      {news.map((item) => {
+        if (item.status !== "pending") {
+          return (
+            <Pressable
+              key={item.id}
+              style={styles.container}
+              onPress={() => toggleModal(item)}
+            >
+              {/* image */}
+              <Image source={{ uri: item.mediaUri }} style={styles.image} />
+
+              <View style={{ padding: 20 }}>
+                {/* title */}
+                <Text style={styles.title}>{item.title}</Text>
+
+                {/* description */}
+                <Text style={styles.description} numberOfLines={3}>
+                  {item.description}
+                </Text>
+
+                <View style={styles.data}>
+                  {/* source */}
+                  <Text>
+                    source: <Text style={styles.source}>{item.source}</Text>
+                  </Text>
+                  <Text style={styles.date}>
+                    {moment(item.publishedAt).format("MMM Do YY")}
+                  </Text>
+                </View>
+              </View>
+            </Pressable>
+          );
+        }
+      })}
+
       {/* Modal */}
       <Modal visible={isModalVisible} animationType="slide">
-        
         <View style={styles.modalContainer}>
-          
           <View style={styles.cardContainer}>
             <Text style={styles.cardTitle}>{selectedNews.title}</Text>
             <Image source={{ uri: selectedNews.mediaUri }} style={styles.Modalimage} />
             <ScrollView style={styles.modalContent}>
-            <Text style={styles.cardDescription}>{selectedNews.description}</Text>
+              <Text style={styles.cardDescription}>{selectedNews.description}</Text>
             </ScrollView>
             <Pressable
               style={styles.closeButton}
@@ -100,7 +105,7 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default LatestNews;
 
 const styles = StyleSheet.create({
   container: {
@@ -154,30 +159,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   modalContainer: {
-   
     flex: 1,
-     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   cardContainer: {
-    backgroundColor: '#fff',
-    width: '100%',
-    height:'100%',
+    backgroundColor: "#fff",
+    width: "100%",
+    height: "100%",
     borderRadius: 5,
     padding: 20,
   },
   cardTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    marginTop:50,
+    marginTop: 50,
   },
   Modalimage: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     marginBottom: 10,
-  
   },
   cardDescription: {
     fontSize: 22,
@@ -185,19 +188,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: '#333',
+    backgroundColor: "#333",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   closeButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
- 
-
-   
- 
 });
