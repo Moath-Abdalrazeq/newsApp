@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 4,
+    marginRight:6
   },
   acceptButton: {
     backgroundColor: "#026efd",

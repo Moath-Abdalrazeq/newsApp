@@ -1498,12 +1498,12 @@
     "@firebase/util" "1.9.3"
     tslib "^2.1.0"
 
-"@firebase/app-compat@0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@firebase/app-compat/-/app-compat-0.2.11.tgz#6f9864a5663ba6da3042880f91641bc435addbce"
-  integrity sha512-IzjLh3Z9F4gPo+Ft7lNVxeKlYfKI6fseUmiLaySidcx/Sdro1vOzoBMOr+5OVVpVVMSib9BZ3QtBKZkPZk+Ucw==
+"@firebase/app-compat@0.2.12":
+  version "0.2.12"
+  resolved "https://registry.yarnpkg.com/@firebase/app-compat/-/app-compat-0.2.12.tgz#90375027edccf2f3782af02014d0eb61ef7fde11"
+  integrity sha512-3EfputoACcXvgi2uN9RUQVDYSmRSR4R4TWJW9Wvs4hTib2I26ldvVhDHaheQq90IwGYrRa+TTWuzr4a5dCRkVQ==
   dependencies:
-    "@firebase/app" "0.9.11"
+    "@firebase/app" "0.9.12"
     "@firebase/component" "0.6.4"
     "@firebase/logger" "0.4.0"
     "@firebase/util" "1.9.3"
@@ -1514,10 +1514,10 @@
   resolved "https://registry.npmjs.org/@firebase/app-types/-/app-types-0.9.0.tgz"
   integrity sha512-AeweANOIo0Mb8GiYm3xhTEBVCmPwTYAu9Hcd2qSkLuga/6+j9b1Jskl5bpiSQWy9eJ/j5pavxj6eYogmnuzm+Q==
 
-"@firebase/app@0.9.11":
-  version "0.9.11"
-  resolved "https://registry.yarnpkg.com/@firebase/app/-/app-0.9.11.tgz#1892645682dd0b1695f4eb79ef21c0ebcc31c6f1"
-  integrity sha512-b6OVXqn2qHXTASLstlu2aW8loHgB7gWcjVWbNKi6pZYZ9Tu3VE+xJuD8NH1br9gDh4ueVnrMBisfBTeZ0Hvlvg==
+"@firebase/app@0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@firebase/app/-/app-0.9.12.tgz#05f83181c54cdab88e054eb0a80d4ec551799b57"
+  integrity sha512-VsE/WHZU8M9BCnHMbOi3FqIVIsoG4FlEehjp+XCDNE0zxn4BGgnpLdBu6/r9Bg565b1ND7dm6LSVRtewmeRb3w==
   dependencies:
     "@firebase/component" "0.6.4"
     "@firebase/logger" "0.4.0"
@@ -1598,13 +1598,13 @@
     faye-websocket "0.11.4"
     tslib "^2.1.0"
 
-"@firebase/firestore-compat@0.3.10":
-  version "0.3.10"
-  resolved "https://registry.yarnpkg.com/@firebase/firestore-compat/-/firestore-compat-0.3.10.tgz#a79330d02d863810a196b60bd33d1bfcb7f78c14"
-  integrity sha512-mPxRwgi8riB0+EXVzwwOBssoBMCR1NtOz8uE0+vPlEzm3qCCDeyWK9Tqu8LBPs2uopWk6GJhy5esDHt0dnUd6A==
+"@firebase/firestore-compat@0.3.11":
+  version "0.3.11"
+  resolved "https://registry.yarnpkg.com/@firebase/firestore-compat/-/firestore-compat-0.3.11.tgz#010c78990c1a2a4b87d0eff68704baefd43f6f32"
+  integrity sha512-jPhySBBp6+Vt750WmeCK4it/NV9YHQEX+jJ7Va8wHOhVejy0zUhL5TsLF6Bz3hCjb4Dxn6XVgvuSqiuqY16yWw==
   dependencies:
     "@firebase/component" "0.6.4"
-    "@firebase/firestore" "3.12.1"
+    "@firebase/firestore" "3.12.2"
     "@firebase/firestore-types" "2.5.1"
     "@firebase/util" "1.9.3"
     tslib "^2.1.0"
@@ -1614,10 +1614,10 @@
   resolved "https://registry.npmjs.org/@firebase/firestore-types/-/firestore-types-2.5.1.tgz"
   integrity sha512-xG0CA6EMfYo8YeUxC8FeDzf6W3FX1cLlcAGBYV6Cku12sZRI81oWcu61RSKM66K6kUENP+78Qm8mvroBcm1whw==
 
-"@firebase/firestore@3.12.1":
-  version "3.12.1"
-  resolved "https://registry.yarnpkg.com/@firebase/firestore/-/firestore-3.12.1.tgz#39eeb357e2d522f4e7f7d837cdaee7cd32cffc68"
-  integrity sha512-TgJup6AIAT9/u7MxdCeES/I96kJx7DLBTokOlW4FiiSCeOzyss9BYBrh1tkkXNIpFn9mUsvT44foZvFsOKp14Q==
+"@firebase/firestore@3.12.2":
+  version "3.12.2"
+  resolved "https://registry.yarnpkg.com/@firebase/firestore/-/firestore-3.12.2.tgz#8f1fbde355bd82b3164a1fac60049a501a1d3fdf"
+  integrity sha512-6EDIJ2V4hlUkPvAb1uH5DAz65ZvhStIM1oYGSUx6mt2UdEDu/0CAVS7xYBY6niTyM/+2r6XBW3hYG/1x1V27vg==
   dependencies:
     "@firebase/component" "0.6.4"
     "@firebase/logger" "0.4.0"
@@ -3399,18 +3399,15 @@
   resolved "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.7.10.tgz"
   integrity sha512-hb9QhOg5MGmpVkFcoZ9XJMe1em5gd0e2eqqjK87O1dwULedXsnY/Zg/Ju6lcohA+t6jVkmKpe7I1etqhvdRdrQ==
 
-"@zegocloud/zego-uikit-prebuilt-live-streaming-rn@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@zegocloud/zego-uikit-prebuilt-live-streaming-rn/-/zego-uikit-prebuilt-live-streaming-rn-1.0.7.tgz#88c82c5435705b1742a1dcc337f43915d3ee42b7"
-  integrity sha512-pDBdNO1r3YZht/MYo6tHRUfHp562++j7Ll/Wen9qjaA+G6LzJYZk7Ig6zdJURqZ+yXbSN0COjYz/mAP7KH3rGw==
+"@zegocloud/zego-uikit-prebuilt-live-streaming-rn@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@zegocloud/zego-uikit-prebuilt-live-streaming-rn/-/zego-uikit-prebuilt-live-streaming-rn-2.1.0.tgz#a8bb6d4974f91147d04e1e8c69fb37717de3c8d1"
+  integrity sha512-zElB2LfiXx4TOwU7aY5z3azC4cCh25/ssGFS4ph2kmORinS7eIShPOiM02mGzosLCJWKfDXtc6x/7W4SvMFKtw==
 
-"@zegocloud/zego-uikit-rn@^1.2.0":
-  version "1.12.6"
-  resolved "https://registry.yarnpkg.com/@zegocloud/zego-uikit-rn/-/zego-uikit-rn-1.12.6.tgz#176ce7dc1371a130afc584c75afba860c8627368"
-  integrity sha512-xfhuBM9dIZoGX6PqGFsHZ6xxSCGr9HykBtwdUiOnu8frV0KdRfiYCXHTHP1e7H6H+fEJXK1X91e36m+MVzKpRQ==
-  dependencies:
-    react-delegate-component "^1.0.0"
-    zego-express-engine-reactnative "^3.2.0"
+"@zegocloud/zego-uikit-rn@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@zegocloud/zego-uikit-rn/-/zego-uikit-rn-2.1.1.tgz#ae3f2f9ece2800fbe3db0e3f6fdece8edbd27bba"
+  integrity sha512-1nba4cmKtucHvONlG3LzJVzVsoXNxqrpVnjPAMY0NzOamROyTf2RRHZmlzEDaL4yq4vgg2/xsypajdFOVau6qA==
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -4774,6 +4771,13 @@ expo-facebook@^12.2.0:
   dependencies:
     "@expo/config-plugins" "^4.0.14"
 
+expo-file-system@^15.2.2:
+  version "15.2.2"
+  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-15.2.2.tgz#a1ddf8aabf794f93888a146c4f5187e2004683a3"
+  integrity sha512-LFkOLcWwlmnjkURxZ3/0ukS35OswX8iuQknLHRHeyk8mUA8fpRPPelD/a1lS+yclqfqavMJmTXVKM1Nsq5XVMA==
+  dependencies:
+    uuid "^3.4.0"
+
 expo-file-system@~15.2.0, expo-file-system@~15.2.2:
   version "15.2.2"
   resolved "https://registry.npmjs.org/expo-file-system/-/expo-file-system-15.2.2.tgz"
@@ -4800,7 +4804,7 @@ expo-image-loader@~4.1.0:
 
 expo-image-picker@^14.1.1:
   version "14.1.1"
-  resolved "https://registry.npmjs.org/expo-image-picker/-/expo-image-picker-14.1.1.tgz"
+  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-14.1.1.tgz#181f1348ba6a43df7b87cee4a601d45c79b7c2d7"
   integrity sha512-SvWtnkLW7jp5Ntvk3lVcRQmhFYja8psmiR7O6P/+7S6f4llt3vaFwb4I3+pUXqJxxpi7BHc2+95qOLf0SFOIag==
   dependencies:
     expo-image-loader "~4.1.0"
@@ -4812,7 +4816,7 @@ expo-keep-awake@~12.0.1:
 
 expo-location@^15.1.1:
   version "15.1.1"
-  resolved "https://registry.npmjs.org/expo-location/-/expo-location-15.1.1.tgz"
+  resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-15.1.1.tgz#9289ca687afbdb73d847cc8c821ab66746eb9d47"
   integrity sha512-hoKRlmi6Ya+NeZ72Zt385SDcSsIDpJI60TCBVO+Hc9xfKA9Hyminyyo5WiwI8J03igmPTCl8Y37MxBNKY9AWkg==
 
 expo-modules-autolinking@1.1.2:
@@ -4833,6 +4837,16 @@ expo-modules-core@1.2.6:
   dependencies:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
+
+expo-permissions@~14.1.1:
+  version "14.1.1"
+  resolved "https://registry.yarnpkg.com/expo-permissions/-/expo-permissions-14.1.1.tgz#6fc4ec5caf712df3ff2d9b7b831a6d9116f1d2b8"
+  integrity sha512-hOuAOBz+ZLsSJ3E8Ere/oA7YIYLNGf9fCApTi9OQmeJyCBsBHynf1yqMfVVpuDcCMixZ2XzsWlScq75f+7U1dQ==
+
+expo-sharing@~11.2.2:
+  version "11.2.2"
+  resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-11.2.2.tgz#7d9e387f1a902e6dd6838c22d9599dae9e7432cf"
+  integrity sha512-4Lhm1eS/CFIzX+JPuxMUTWBt9rv/WdvJvpQ9y+71bL/9w9dhvsdt9tv0SsNZATz4hk0tbrYD8ZEUsgiHiT1KkQ==
 
 expo-status-bar@~1.4.4:
   version "1.4.4"
@@ -5075,24 +5089,24 @@ find-yarn-workspace-root@~2.0.0:
   dependencies:
     micromatch "^4.0.2"
 
-firebase@^9.22.1:
-  version "9.22.1"
-  resolved "https://registry.yarnpkg.com/firebase/-/firebase-9.22.1.tgz#9bf49d8cb87eefae6500cc2bd2ec1fddbc1c1ebb"
-  integrity sha512-8x55ZZJwPlctKIhlfXL+KTOpdabp6dDpDwTEmuW1QNbfCkE1ZEuXHgjiQMfTkoeyQO9luV6YwVdgbgCt7yfYCg==
+firebase@^9.22.2:
+  version "9.22.2"
+  resolved "https://registry.yarnpkg.com/firebase/-/firebase-9.22.2.tgz#8619bbdf38ab691d6b14da5d863370ab2c7ab6e5"
+  integrity sha512-eBXsaTzXPx3Y0QhuuluG/qR58tlOx2X/W0GKNoF004FcG9L2gHuvGu5/bIczvrPyfNOCqDF+I5I/kOQi8l9m0A==
   dependencies:
     "@firebase/analytics" "0.10.0"
     "@firebase/analytics-compat" "0.2.6"
-    "@firebase/app" "0.9.11"
+    "@firebase/app" "0.9.12"
     "@firebase/app-check" "0.8.0"
     "@firebase/app-check-compat" "0.3.7"
-    "@firebase/app-compat" "0.2.11"
+    "@firebase/app-compat" "0.2.12"
     "@firebase/app-types" "0.9.0"
     "@firebase/auth" "0.23.2"
     "@firebase/auth-compat" "0.4.2"
     "@firebase/database" "0.14.4"
     "@firebase/database-compat" "0.3.4"
-    "@firebase/firestore" "3.12.1"
-    "@firebase/firestore-compat" "0.3.10"
+    "@firebase/firestore" "3.12.2"
+    "@firebase/firestore-compat" "0.3.11"
     "@firebase/functions" "0.10.0"
     "@firebase/functions-compat" "0.3.5"
     "@firebase/installations" "0.6.4"
@@ -7734,10 +7748,10 @@ react-native-reanimated@~2.14.4:
     setimmediate "^1.0.5"
     string-hash-64 "^1.0.3"
 
-react-native-safe-area-context@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.5.0.tgz#9208313236e8f49e1920ac1e2a2c975f03aed284"
-  integrity sha512-0WORnk9SkREGUg2V7jHZbuN5x4vcxj/1B0QOcXJjdYWrzZHgLcUzYWWIUecUPJh747Mwjt/42RZDOaFn3L8kPQ==
+react-native-safe-area-context@^4.5.3:
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.5.3.tgz#e98eb1a73a6b3846d296545fe74760754dbaaa69"
+  integrity sha512-ihYeGDEBSkYH+1aWnadNhVtclhppVgd/c0tm4mj0+HV11FoiWJ8N6ocnnZnRLvM5Fxc+hUqxR9bm5AXU3rXiyA==
 
 react-native-safe-area-view@^0.14.9:
   version "0.14.9"
@@ -7753,6 +7767,11 @@ react-native-screens@^3.18.2:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-share@^8.2.2:
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-8.2.2.tgz#987d6f164afe57b089950dca42e0555f19045d27"
+  integrity sha512-kVCI/cT0GnuYUTXe6mAimrjrnt4VWoRfrWqJZjFeoYFqAyOEfos84RC4eZlZnOT5eVtmTXRIkor5vgSkKOlZhw==
 
 react-native-streamer@^0.1.11:
   version "0.1.11"
@@ -9319,7 +9338,12 @@ yocto-queue@^0.1.0:
   resolved "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zego-express-engine-reactnative@^3.0.1, zego-express-engine-reactnative@^3.2.0:
+zego-express-engine-reactnative@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/zego-express-engine-reactnative/-/zego-express-engine-reactnative-3.2.0.tgz#e4098a7ff0434110e9363e231d896f4bb0eec900"
   integrity sha512-UkAw+PdFesNg2NiXZxifhG2KP67RGPE1QYj5jo8wXp3gswM5axeyIqKuqJeBxhkKdPPGei8jQ5MFmTXrVaRm5Q==
+
+zego-zim-react-native@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/zego-zim-react-native/-/zego-zim-react-native-2.8.0.tgz#cb1b74ec746b6bdb4f3f6a45c4bbba068a877ea6"
+  integrity sha512-dS0w1mwEL0Edc7XwIbYsYn1aJiB6MYpMWV4rYSn9gcAQ76AwJxIa19g1Dyv+uorQ7JPNB/CmMeAl0oheaBRHJg==

@@ -15,6 +15,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import * as Location from 'expo-location';
+import * as LocationGeocoding from 'expo-location';
 
 const firebaseConfig = {
   apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
@@ -38,6 +39,7 @@ const AddNews = () => {
   const [description, setDescription] = useState("");
   const [mediaUri, setMediaUri] = useState(null);
   const [location, setLocation] = useState(null);
+  const [city, setCity] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -48,13 +50,30 @@ const AddNews = () => {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+
+      reverseGeocode(location.coords.latitude, location.coords.longitude);
     })();
   }, []);
 
+  const reverseGeocode = async (latitude, longitude) => {
+    try {
+      const addressData = await LocationGeocoding.reverseGeocodeAsync({ latitude, longitude });
+      const address = addressData[0];
+      const city = address.city || address.subregion || address.region || "";
+      setCity(city);
+    } catch (error) {
+      console.log('Error reverse geocoding:', error);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!location) {
       alert("Location not available.");
+      return;
+    }
+
+    if (!city) {
+      alert("City not available.");
       return;
     }
 
@@ -76,7 +95,8 @@ const AddNews = () => {
       description: description,
       mediaUri: mediaUri,
       location: new firebase.firestore.GeoPoint(location.coords.latitude, location.coords.longitude),
-      status: initialStatus // Set the initial status based on user role
+      city: city,
+      status: initialStatus
     };
 
     newsRef
@@ -91,23 +111,22 @@ const AddNews = () => {
         alert("Error adding news: ", error);
       });
   };
-  
+
   const handleUploadMedia = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
       Alert.alert("Permission to access media library is required!");
       return;
     }
+
     const mediaLibraryOptions = {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      videoExportPreset: ImagePicker.VideoExportPreset.MediumQuality,
-       
       allowsEditing: true,
       quality: 1,
     };
-    
+
     const result = await ImagePicker.launchImageLibraryAsync(mediaLibraryOptions);
-    if (result.canceled) {
+    if (result.cancelled) {
       return;
     }
     if (result.assets.length > 0) {
@@ -115,8 +134,7 @@ const AddNews = () => {
       setMediaUri(selectedAsset.uri);
     }
   };
-  
- 
+
   return (
     <View style={styles.container} onPress={() => Keyboard.dismiss()}>
       <Text style={styles.label}>Title:</Text>
@@ -178,7 +196,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 8,
-    marginBottom:20,
+    marginBottom: 20,
   },
   buttonText: {
     color: "#fff",
@@ -191,7 +209,6 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 16,
   },
-  
 });
 
 export default AddNews;
