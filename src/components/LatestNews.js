@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Pressable, Image, Modal, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  Image,
+  Modal,
+  ScrollView,
+  Share,
+} from "react-native";
 import moment from "moment";
+import { Ionicons } from "@expo/vector-icons";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -14,6 +24,7 @@ const firebaseConfig = {
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
   measurementId: "G-KVL2B1SPCG"
 };
+
 // Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -28,6 +39,18 @@ const LatestNews = () => {
   const toggleModal = (item) => {
     setSelectedNews(item);
     setIsModalVisible(true);
+  };
+
+  const shareNews = async (item) => {
+    try {
+      await Share.share({
+        message: `${item.title}\n\n${item.description}\n\nPublished on: ${moment(
+          item.publishedAt
+        ).format("MMM Do YY")}\n\nRead more at: ${item.mediaUri}`,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const [news, setNews] = useState([]);
@@ -77,6 +100,17 @@ const LatestNews = () => {
                     {moment(item.publishedAt).format("MMM Do YY")}
                   </Text>
                 </View>
+
+                <Pressable
+                  style={styles.shareButton}
+                  onPress={() => shareNews(item)}
+                >
+                  <Ionicons
+                    name="share"
+                    size={35}
+                    color="black"
+                  />
+                </Pressable>
               </View>
             </Pressable>
           );
@@ -88,9 +122,14 @@ const LatestNews = () => {
         <View style={styles.modalContainer}>
           <View style={styles.cardContainer}>
             <Text style={styles.cardTitle}>{selectedNews.title}</Text>
-            <Image source={{ uri: selectedNews.mediaUri }} style={styles.Modalimage} />
+            <Image
+              source={{ uri: selectedNews.mediaUri }}
+              style={styles.Modalimage}
+            />
             <ScrollView style={styles.modalContent}>
-              <Text style={styles.cardDescription}>{selectedNews.description}</Text>
+              <Text style={styles.cardDescription}>
+                {selectedNews.description}
+              </Text>
             </ScrollView>
             <Pressable
               style={styles.closeButton}
@@ -104,8 +143,8 @@ const LatestNews = () => {
     </ScrollView>
   );
 };
-
 export default LatestNews;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -199,4 +238,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  shareButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    marginTop:10,
+    marginLeft:280
+  },
+  
+  
 });

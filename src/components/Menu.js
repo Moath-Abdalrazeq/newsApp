@@ -7,11 +7,10 @@ import LatestNews from './LatestNews'
 import Map from './Map'
 import AddNews from "./AddNews";
 import LiveStraem from './LiveStream'
-import AcceptJournalist from "./AcceptJournalist"
-import AdminAcceptNews from "./AdminAcceptNews"
+import AcceptJournalist from "./AdminWorkflow/AcceptJournalist"
+import AdminAcceptNews from "./AdminWorkflow/AdminAcceptNews"
 import profilePageJournalist from './profilePageJournalist';
-
-const Drawer = createDrawerNavigator();
+ const Drawer = createDrawerNavigator();
 
 export default function Menu({ user }) {
   const handleChangePassword = () => {
@@ -90,12 +89,13 @@ export default function Menu({ user }) {
               </TouchableOpacity>
 
               <TouchableOpacity style={{ marginBottom: 20, paddingTop: 20 }} onPress={() => navigation.navigate("AdminAcceptNews")}>
-                <FontAwesome5 name="users" size={24} color="black" style={{ marginLeft: 10 }}>
+                <FontAwesome5 name="newspaper" size={24} color="black" style={{ marginLeft: 10 }}>
                   <Text style={{ fontSize: 20 }}>Accept the news</Text>
                 </FontAwesome5>
               </TouchableOpacity>
             </>
           )}
+         
         </View>
       )}
     >
