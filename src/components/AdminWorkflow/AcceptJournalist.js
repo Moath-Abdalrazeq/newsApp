@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking } from "react-native";
-import { firebase } from "../../config";
+import { firebase } from "../../../config";
 
 const AdminDashboard = () => {
   const [pendingRegistrations, setPendingRegistrations] = useState([]);

@@ -5,11 +5,12 @@ import "firebase/compat/firestore";
 import moment from "moment";
 
 const db = firebase.firestore();
-const JeninNews = () => {
+
+const CityNews = ({ city }) => {
   const [news, setNews] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
   const [selectedNews, setSelectedNews] = useState({});
+
   useEffect(() => {
     const unsubscribe = db
       .collection("news")
@@ -21,17 +22,15 @@ const JeninNews = () => {
         });
         setNews(news);
       });
+
     return unsubscribe;
   }, []);
-  const toggleModal = (item) => {
-    setSelectedNews(item);
-    setIsModalVisible(true);
-  };
+
   useEffect(() => {
     const fetchNews = async () => {
       const newsRef = firebase.firestore().collection("news");
-      const query = newsRef.where("city", "==", "Jenin");
-      
+      const query = newsRef.where("city", "==", city);
+
       try {
         const snapshot = await query.get();
         const newsData = snapshot.docs.map((doc) => ({
@@ -45,48 +44,57 @@ const JeninNews = () => {
     };
 
     fetchNews();
-  }, []);
+  }, [city]);
+
+  const toggleModal = (item) => {
+    setSelectedNews(item);
+    setIsModalVisible(true);
+  };
 
   return (
     <ScrollView>
-       
       {news.map((item) => (
-              <Pressable
-              key={item.id}
-              style={styles.container}
-              onPress={() => toggleModal(item)}
-            >
-              {/* image */}
-              <Image source={{ uri: item.mediaUri }} style={styles.image} />
+        <Pressable
+          key={item.id}
+          style={styles.container}
+          onPress={() => toggleModal(item)}
+        >
+          {/* image */}
+          <Image source={{ uri: item.mediaUri }} style={styles.image} />
 
-              <View style={{ padding: 20 }}>
-                {/* title */}
-                <Text style={styles.title}>{item.title}</Text>
+          <View style={{ padding: 20 }}>
+            {/* title */}
+            <Text style={styles.title}>{item.title}</Text>
 
-                {/* description */}
-                <Text style={styles.description} numberOfLines={3}>
-                  {item.description}
-                </Text>
+            {/* description */}
+            <Text style={styles.description} numberOfLines={3}>
+              {item.description}
+            </Text>
 
-                <View style={styles.data}>
-                  {/* source */}
-                  <Text>
-                    source: <Text style={styles.source}>{item.source}</Text>
-                  </Text>
-                  <Text style={styles.date}>
-                    {moment(item.publishedAt).format("MMM Do YY")}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
+            <View style={styles.data}>
+              {/* source */}
+              <Text>
+                source: <Text style={styles.source}>{item.source}</Text>
+              </Text>
+              <Text style={styles.date}>
+                {moment(item.publishedAt).format("MMM Do YY")}
+              </Text>
+            </View>
+          </View>
+        </Pressable>
       ))}
-       <Modal visible={isModalVisible} animationType="slide">
+      <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.cardContainer}>
             <Text style={styles.cardTitle}>{selectedNews.title}</Text>
-            <Image source={{ uri: selectedNews.mediaUri }} style={styles.Modalimage} />
+            <Image
+              source={{ uri: selectedNews.mediaUri }}
+              style={styles.Modalimage}
+            />
             <ScrollView style={styles.modalContent}>
-              <Text style={styles.cardDescription}>{selectedNews.description}</Text>
+              <Text style={styles.cardDescription}>
+                {selectedNews.description}
+              </Text>
             </ScrollView>
             <Pressable
               style={styles.closeButton}
@@ -101,7 +109,8 @@ const JeninNews = () => {
   );
 };
 
-export default JeninNews;
+export default CityNews;
+
 const styles = StyleSheet.create({
   container: {
     width: "90%",
