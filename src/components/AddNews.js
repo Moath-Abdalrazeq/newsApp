@@ -1,4 +1,4 @@
-import React, { useState,useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,13 +8,14 @@ import {
   Image,
   Video,
   StyleSheet,
-  Keyboard 
+  Keyboard
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import * as Location from 'expo-location';
+import * as LocationGeocoding from 'expo-location';
 
 const firebaseConfig = {
   apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
@@ -23,8 +24,9 @@ const firebaseConfig = {
   storageBucket: "newsapp-32049.appspot.com",
   messagingSenderId: "109848058571",
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
-  measurementId: "G-KVL2B1SPCG",
+  measurementId: "G-KVL2B1SPCG"
 };
+
 // Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -37,6 +39,7 @@ const AddNews = () => {
   const [description, setDescription] = useState("");
   const [mediaUri, setMediaUri] = useState(null);
   const [location, setLocation] = useState(null);
+  const [city, setCity] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -47,9 +50,21 @@ const AddNews = () => {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+
+      reverseGeocode(location.coords.latitude, location.coords.longitude);
     })();
   }, []);
 
+  const reverseGeocode = async (latitude, longitude) => {
+    try {
+      const addressData = await LocationGeocoding.reverseGeocodeAsync({ latitude, longitude });
+      const address = addressData[0];
+      const city = address.city || address.subregion || address.region || "";
+      setCity(city);
+    } catch (error) {
+      console.log('Error reverse geocoding:', error);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!location) {
@@ -57,13 +72,33 @@ const AddNews = () => {
       return;
     }
 
+    if (!city) {
+      alert("City not available.");
+      return;
+    }
+
+    const currentUser = firebase.auth().currentUser;
+    const usersRef = firebase.firestore().collection("users").doc(currentUser.uid);
+    const doc = await usersRef.get();
+
+    if (!doc.exists) {
+      alert("User not found.");
+      return;
+    }
+
+    const userRole = doc.data().role;
+    let initialStatus = userRole === "journalist" ? "accepted" : "pending";
+
     const newsRef = firebase.firestore().collection("news");
     const newNews = {
       title: title,
       description: description,
       mediaUri: mediaUri,
-      location: new firebase.firestore.GeoPoint(location.coords.latitude, location.coords.longitude)
+      location: new firebase.firestore.GeoPoint(location.coords.latitude, location.coords.longitude),
+      city: city,
+      status: initialStatus
     };
+
     newsRef
       .add(newNews)
       .then(() => {
@@ -76,25 +111,22 @@ const AddNews = () => {
         alert("Error adding news: ", error);
       });
   };
-  
 
-  
   const handleUploadMedia = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
       Alert.alert("Permission to access media library is required!");
       return;
     }
+
     const mediaLibraryOptions = {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      videoExportPreset: ImagePicker.VideoExportPreset.MediumQuality,
-       
       allowsEditing: true,
       quality: 1,
     };
-    
+
     const result = await ImagePicker.launchImageLibraryAsync(mediaLibraryOptions);
-    if (result.canceled) {
+    if (result.cancelled) {
       return;
     }
     if (result.assets.length > 0) {
@@ -102,8 +134,7 @@ const AddNews = () => {
       setMediaUri(selectedAsset.uri);
     }
   };
-  
- 
+
   return (
     <View style={styles.container} onPress={() => Keyboard.dismiss()}>
       <Text style={styles.label}>Title:</Text>
@@ -124,12 +155,12 @@ const AddNews = () => {
         <Text style={styles.buttonText}>Upload Media</Text>
       </TouchableOpacity>
       {mediaUri ? (
-  mediaUri.endsWith(".mov") ? (
-    <Video source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
-  ) : (
-    <Image source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
-  )
-) : null}
+        mediaUri.endsWith(".mov") ? (
+          <Video source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+        ) : (
+          <Image source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+        )
+      ) : null}
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Add News</Text>
@@ -165,7 +196,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 8,
-    marginBottom:20,
+    marginBottom: 20,
   },
   buttonText: {
     color: "#fff",
@@ -178,7 +209,6 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 16,
   },
-  
 });
 
 export default AddNews;
