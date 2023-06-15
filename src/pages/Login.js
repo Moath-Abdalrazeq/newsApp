@@ -38,7 +38,7 @@ const Login = () => {
           >
             <View style={styles.center}>
               <Image
-                source={require("../../images/Logo.png")}
+                source={require("../../assets/images/Logo.png")}
                 style={styles.logo}
               />
               <View style={styles.form}>

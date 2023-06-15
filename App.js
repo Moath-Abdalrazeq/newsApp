@@ -9,14 +9,17 @@ import Header from "./src/components/Header";
 import "firebase/firestore";
 import * as Location from "expo-location";
 import { Linking } from "react-native";
-import ClientScreen from "./src/components/ClientScreen";
-import AddNews from "./src/components/AddNews";
+import ClientScreen from "./src/components/WorkflowScreens/ClientScreen";
 const Stack = createStackNavigator();
-import LatestNews from './src/components/LatestNews'
-import LiveStraem from './src/components/LiveStream'
-import JeninNews from './src/components/JeninNews'
-import NablusNews from './src/components/NablusNews'
- function LocationDeniedScreen() {
+import JournalistScreen from "./src/components/WorkflowScreens/JournalistScreen";
+import AdminScreen from "./src/components/WorkflowScreens/AdminScreen";
+import JeninNews from "./src/components/CitiesNews/JeninNews";
+import NablusNews from "./src/components/CitiesNews/NablusNews";
+import LatestNews from "./src/components/LatestNews";
+import ClientRegistration from "./src/pages/ClientRegistration";
+import JournalistRegistration from "./src/pages/JournalistRegistration";
+
+function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
   };
@@ -38,9 +41,8 @@ function App() {
   const [location, setLocation] = useState({});
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
-  const [showLocationDeniedScreen, setShowLocationDeniedScreen] = useState(
-    false
-  );
+  const [showLocationDeniedScreen, setShowLocationDeniedScreen] =
+    useState(false);
 
   useEffect(() => {
     (async () => {
@@ -57,8 +59,33 @@ function App() {
 
   function onAuthStateChanged(user) {
     setUser(user);
+    if (!user) {
+      setUserRole(null);
+      setUserStatus(null);
+    }
     if (initializing) setInitializing(false);
+    if (user) {
+      firebase
+        .firestore()
+        .collection("users")
+        .where("email", "==", user.email)
+        .get()
+        .then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+            const role = querySnapshot.docs[0].data().role;
+            const status = querySnapshot.docs[0].data().status;
+            setUserRole(role);
+            setUserStatus(status);
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting user role and status:", error);
+        });
+    }
   }
+
+  const [userRole, setUserRole] = useState(null);
+  const [userStatus, setUserStatus] = useState(null);
 
   useEffect(() => {
     const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
@@ -71,7 +98,40 @@ function App() {
 
   if (initializing) return null;
 
-  if (!user) {
+  if (userRole === "journalist" && userStatus === "active") {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="JournalistScreen" component={JournalistScreen} />
+          <Stack.Screen name="JeninNews" component={JeninNews} />
+          <Stack.Screen name="NablusNews" component={NablusNews} />
+          <Stack.Screen name="LatestNews" component={LatestNews} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else if (userRole === "client") {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="ClientScreen" component={ClientScreen} />
+          <Stack.Screen name="JeninNews" component={JeninNews} />
+          <Stack.Screen name="NablusNews" component={NablusNews} />
+          <Stack.Screen name="LatestNews" component={LatestNews} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else if (userRole === "admin") {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="AdminScreen" component={AdminScreen} />
+          <Stack.Screen name="JeninNews" component={JeninNews} />
+          <Stack.Screen name="NablusNews" component={NablusNews} />
+          <Stack.Screen name="LatestNews" component={LatestNews} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else {
     return (
       <NavigationContainer>
         <Stack.Navigator>
@@ -105,29 +165,22 @@ function App() {
               },
             }}
           />
+          <Stack.Screen
+            name="ClientRegistration"
+            component={ClientRegistration}
+          />
+          <Stack.Screen
+            name="JournalistRegistration"
+            component={JournalistRegistration}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     );
-  } 
-    return (
-      <NavigationContainer>
-        <Stack.Navigator  >
-          <Stack.Screen name="ClientScreen" component={ClientScreen} />
-          <Stack.Screen name="LatestNews" component={LatestNews}   />
-          <Stack.Screen name="Map" component={Map} />
-          <Stack.Screen name="JeninNews" component={JeninNews} />
-          <Stack.Screen name="NablusNews" component={NablusNews} />
-          <Stack.Screen name="AddNews" component={AddNews} location={location} />
-          <Stack.Screen name="LiveStraem" component={LiveStraem} />
-
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
- 
-
+  }
 }
 
 export default App;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

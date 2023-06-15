@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
-import {View,  StyleSheet,  Text,  Pressable,  Image,Modal,ScrollView,} from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  Image,
+  Modal,
+  ScrollView,
+  Share,
+} from "react-native";
 import moment from "moment";
+import { Ionicons } from "@expo/vector-icons";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -14,6 +24,7 @@ const firebaseConfig = {
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
   measurementId: "G-KVL2B1SPCG"
 };
+
 // Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -21,7 +32,7 @@ if (!firebase.apps.length) {
 
 const db = firebase.firestore();
 
-const HomeScreen = () => {
+const LatestNews = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedNews, setSelectedNews] = useState({});
 
@@ -30,62 +41,95 @@ const HomeScreen = () => {
     setIsModalVisible(true);
   };
 
+  const shareNews = async (item) => {
+    try {
+      await Share.share({
+        message: `${item.title}\n\n${item.description}\n\nPublished on: ${moment(
+          item.publishedAt
+        ).format("MMM Do YY")}\n\nRead more at: ${item.mediaUri}`,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const [news, setNews] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = db.collection("news").onSnapshot((querySnapshot) => {
-      const news = [];
-      querySnapshot.forEach((doc) => {
-        news.push({ id: doc.id, ...doc.data() });
+    const unsubscribe = db
+      .collection("news")
+      .where("status", "==", "accepted")
+      .onSnapshot((querySnapshot) => {
+        const news = [];
+        querySnapshot.forEach((doc) => {
+          news.push({ id: doc.id, ...doc.data() });
+        });
+        setNews(news);
       });
-      setNews(news);
-    });
     return unsubscribe;
   }, []);
 
   return (
     <ScrollView>
-      {news.map((item) => (
-        <Pressable
-          key={item.id}
-          style={styles.container}
-          onPress={() => toggleModal(item)}
-        >
-          {/* image */}
-          <Image source={{ uri: item.mediaUri }} style={styles.image} />
-  
-          <View style={{ padding: 20 }}>
-            {/*    title */}
-            <Text style={styles.title}>{item.title}</Text>
-  
-            {/*    description */}
-            <Text style={styles.description} numberOfLines={3}>
-              {item.description}
-            </Text>
-  
-            <View style={styles.data}>
-              {/*     source */}
-               <Text>
-                source: <Text style={styles.source}>{item.source}</Text>
-              </Text>
-              <Text style={styles.date}>
-                {moment(item.publishedAt).format("MMM Do YY")}
-              </Text>
-            </View>
-          </View>
-        </Pressable>
-      ))}
-  
+      {news.map((item) => {
+        if (item.status !== "pending") {
+          return (
+            <Pressable
+              key={item.id}
+              style={styles.container}
+              onPress={() => toggleModal(item)}
+            >
+              {/* image */}
+              <Image source={{ uri: item.mediaUri }} style={styles.image} />
+
+              <View style={{ padding: 20 }}>
+                {/* title */}
+                <Text style={styles.title}>{item.title}</Text>
+
+                {/* description */}
+                <Text style={styles.description} numberOfLines={3}>
+                  {item.description}
+                </Text>
+
+                <View style={styles.data}>
+                  {/* source */}
+                  <Text>
+                    source: <Text style={styles.source}>{item.source}</Text>
+                  </Text>
+                  <Text style={styles.date}>
+                    {moment(item.publishedAt).format("MMM Do YY")}
+                  </Text>
+                </View>
+
+                <Pressable
+                  style={styles.shareButton}
+                  onPress={() => shareNews(item)}
+                >
+                  <Ionicons
+                    name="share"
+                    size={35}
+                    color="black"
+                  />
+                </Pressable>
+              </View>
+            </Pressable>
+          );
+        }
+      })}
+
       {/* Modal */}
       <Modal visible={isModalVisible} animationType="slide">
-        
         <View style={styles.modalContainer}>
-          
           <View style={styles.cardContainer}>
             <Text style={styles.cardTitle}>{selectedNews.title}</Text>
-            <Image source={{ uri: selectedNews.mediaUri }} style={styles.Modalimage} />
+            <Image
+              source={{ uri: selectedNews.mediaUri }}
+              style={styles.Modalimage}
+            />
             <ScrollView style={styles.modalContent}>
-            <Text style={styles.cardDescription}>{selectedNews.description}</Text>
+              <Text style={styles.cardDescription}>
+                {selectedNews.description}
+              </Text>
             </ScrollView>
             <Pressable
               style={styles.closeButton}
@@ -99,8 +143,8 @@ const HomeScreen = () => {
     </ScrollView>
   );
 };
+export default LatestNews;
 
-export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -154,30 +198,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   modalContainer: {
-   
     flex: 1,
-     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   cardContainer: {
-    backgroundColor: '#fff',
-    width: '100%',
-    height:'100%',
+    backgroundColor: "#fff",
+    width: "100%",
+    height: "100%",
     borderRadius: 5,
     padding: 20,
   },
   cardTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    marginTop:50,
+    marginTop: 50,
   },
   Modalimage: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     marginBottom: 10,
-  
   },
   cardDescription: {
     fontSize: 22,
@@ -185,19 +227,25 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: '#333',
+    backgroundColor: "#333",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   closeButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
- 
-
-   
- 
+  shareButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    marginTop:10,
+    marginLeft:280
+  },
+  
+  
 });
