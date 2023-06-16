@@ -18,7 +18,7 @@ import NablusNews from "./src/components/CitiesNews/NablusNews";
 import LatestNews from "./src/components/LatestNews";
 import ClientRegistration from "./src/pages/ClientRegistration";
 import JournalistRegistration from "./src/pages/JournalistRegistration";
-
+import PushScreen from "./src/components/PushScreen";
 function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
@@ -106,6 +106,7 @@ function App() {
           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
+          <Stack.Screen name="Push" component={PushScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -117,6 +118,7 @@ function App() {
           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
+          <Stack.Screen name="Push" component={PushScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -128,6 +130,7 @@ function App() {
           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
+          <Stack.Screen name="Push" component={PushScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     );

@@ -71,24 +71,19 @@ const AddNews = () => {
       alert("Location not available.");
       return;
     }
-
-    if (!city) {
-      alert("City not available.");
-      return;
-    }
-
+  
     const currentUser = firebase.auth().currentUser;
     const usersRef = firebase.firestore().collection("users").doc(currentUser.uid);
     const doc = await usersRef.get();
-
+  
     if (!doc.exists) {
       alert("User not found.");
       return;
     }
-
+  
     const userRole = doc.data().role;
     let initialStatus = userRole === "journalist" ? "accepted" : "pending";
-
+  
     const newsRef = firebase.firestore().collection("news");
     const newNews = {
       title: title,
@@ -96,9 +91,10 @@ const AddNews = () => {
       mediaUri: mediaUri,
       location: new firebase.firestore.GeoPoint(location.coords.latitude, location.coords.longitude),
       city: city,
-      status: initialStatus
+      status: initialStatus,
+      date: new Date().toLocaleString()   
     };
-
+  
     newsRef
       .add(newNews)
       .then(() => {
@@ -111,6 +107,7 @@ const AddNews = () => {
         alert("Error adding news: ", error);
       });
   };
+  
 
   const handleUploadMedia = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -126,12 +123,17 @@ const AddNews = () => {
     };
 
     const result = await ImagePicker.launchImageLibraryAsync(mediaLibraryOptions);
-    if (result.cancelled) {
+    if (result.canceled) {
       return;
     }
     if (result.assets.length > 0) {
       const selectedAsset = result.assets[0];
       setMediaUri(selectedAsset.uri);
+    }
+
+    // If the city is not available, set it to an empty string
+    if (!city) {
+      setCity("");
     }
   };
 

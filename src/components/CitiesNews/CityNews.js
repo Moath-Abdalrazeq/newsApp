@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Pressable, Image, Modal, ScrollView } from "react-native";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
-import moment from "moment";
-
+ 
 const db = firebase.firestore();
 
 const CityNews = ({ city }) => {
@@ -72,13 +71,13 @@ const CityNews = ({ city }) => {
             </Text>
 
             <View style={styles.data}>
-              {/* source */}
+              {/* city */}
               <Text>
-                source: <Text style={styles.source}>{item.source}</Text>
+                City: <Text style={styles.source}>{item.city}</Text>
               </Text>
-              <Text style={styles.date}>
-                {moment(item.publishedAt).format("MMM Do YY")}
-              </Text>
+              <Text> 
+                  Date: <Text style={styles.date}>{item.date}</Text>
+                  </Text>
             </View>
           </View>
         </Pressable>
