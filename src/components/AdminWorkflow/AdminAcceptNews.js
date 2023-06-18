@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, Button, StyleSheet, Alert, Image, Modal, ScrollView } from "react-native";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
+import { registerForPushNotificationsAsync, sendPushNotificationAsync } from 'expo-notifications';
 
 const AdminInterface = () => {
   const [pendingNews, setPendingNews] = useState([]);
@@ -22,13 +23,14 @@ const AdminInterface = () => {
     fetchPendingNews();
   }, []);
 
-  const handleAcceptNews = (newsId) => {
+  const handleAcceptNews = async (newsId) => {
     const newsRef = firebase.firestore().collection("news").doc(newsId);
     newsRef
       .update({ status: "accepted" })
       .then(() => {
         Alert.alert("Success", "The news has been accepted.");
         removeNewsItem(newsId);
+        sendNotification(newsId, "Your news has been accepted.");
       })
       .catch((error) => {
         Alert.alert("Error", "Failed to accept the news.");
@@ -36,18 +38,44 @@ const AdminInterface = () => {
       });
   };
 
-  const handleRejectNews = (newsId) => {
+  const handleRejectNews = async (newsId) => {
     const newsRef = firebase.firestore().collection("news").doc(newsId);
     newsRef
       .update({ status: "rejected" })
       .then(() => {
         Alert.alert("Success", "The news has been rejected.");
         removeNewsItem(newsId);
+        sendNotification(newsId, "Your news has been rejected.");
       })
       .catch((error) => {
         Alert.alert("Error", "Failed to reject the news.");
         console.error(error);
       });
+  };
+
+  const sendNotification = async (newsId, message) => {
+    const { status: existingStatus } = await registerForPushNotificationsAsync();
+    let finalStatus = existingStatus;
+
+    if (existingStatus !== 'granted') {
+      const { status } = await registerForPushNotificationsAsync();
+      finalStatus = status;
+    }
+
+    if (finalStatus !== 'granted') {
+      Alert.alert('Error', 'Failed to grant notification permissions.');
+      return;
+    }
+
+    const registrationToken = await registerForPushNotificationsAsync();
+    const notification = {
+      to: registrationToken.data,
+      sound: 'default',
+      title: 'News Update',
+      body: message,
+      data: { newsId },
+    };
+    await sendPushNotificationAsync(notification);
   };
 
   const removeNewsItem = (newsId) => {

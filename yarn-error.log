@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\TOSHIBA\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add nodemediaclient
+  C:\Program Files\nodejs\node.exe C:\Users\TOSHIBA\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add react-native-node-media-client
 
 PATH: 
   C:\Program Files (x86)\Google\Chrome\Application;C:\Program Files\Eclipse Adoptium\jdk-11.0.18.10-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Users\TOSHIBA\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\Git\cmd;C:\Program Files\Microchip\xc8\v2.36\bin;C:\Program Files\Java\jdk-11.0.17\bin;C:\Users\TOSHIBA\AppData\Roaming\npm;D:\Microchip\xc8\v2.36\bin;C:\Users\TOSHIBA\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\Eclipse Adoptium\jdk-11.0.18.10-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Users\TOSHIBA\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\Git\cmd;C:\Program Files\Microchip\xc8\v2.36\bin;C:\Program Files\Java\jdk-11.0.17\bin;C:\Users\TOSHIBA\AppData\Roaming\npm;D:\Microchip\xc8\v2.36\bin;C:\Users\TOSHIBA\AppData\Local\Android\Sdk\platform-tools;;C:\Users\TOSHIBA\AppData\Local\Microsoft\WindowsApps;C:\Ruby27\bin;C:\Users\TOSHIBA\AppData\Local\Programs\Microsoft VS Code\bin
@@ -14,7 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/nodemediaclient: Not found
+  Error: https://registry.npmjs.org/react-native-node-media-client: Not found
       at params.callback [as _callback] (C:\Users\TOSHIBA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66145:18)
       at self.callback (C:\Users\TOSHIBA\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140890:22)
       at Request.emit (node:events:513:28)
@@ -82,7 +82,7 @@ npm manifest:
       "react-native": "0.71.11",
       "react-native-agora": "^4.2.0",
       "react-native-blob-util": "^0.18.2",
-      "react-native-camera": "3.43.0",
+      "react-native-camera": "^4.2.1",
       "react-native-camera-kit": "^13.0.0",
       "react-native-css-module": "^1.0.0",
       "react-native-datepicker": "^1.7.2",
@@ -7924,10 +7924,10 @@ Lockfile:
     dependencies:
       lodash "^4.14.2"
   
-  react-native-camera@3.43.0:
-    version "3.43.0"
-    resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-3.43.0.tgz#12b8d2fadf008af252abb99c7d4a964bbf4cdbf0"
-    integrity sha512-I+04f5L+7Z6ZwUarw+79VePAB//VxidPVsv1Ec7+uuKv3rAkZ+8OBxtm1487OVrY6V3dMdl7BKByv4BIDUY1pQ==
+  react-native-camera@^4.2.1:
+    version "4.2.1"
+    resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-4.2.1.tgz#caf74081f055e89d7e9b0cd5108965d808c60e90"
+    integrity sha512-+Vkql24PFYQfsPRznJCvPwJQfyzCnjlcww/iZ4Ej80bgivKjL9eU0IMQIXp4yi6XCrKi4voWXxIDPMupQZKeIQ==
     dependencies:
       prop-types "^15.6.2"
   
