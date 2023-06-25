@@ -8,14 +8,16 @@ import {
   Image,
   Video,
   StyleSheet,
-  Keyboard
+  KeyboardAvoidingView,
+  ScrollView,
+  Keyboard,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import * as Location from 'expo-location';
-import * as LocationGeocoding from 'expo-location';
+import * as Location from "expo-location";
+import * as LocationGeocoding from "expo-location";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
@@ -40,11 +42,12 @@ const AddNews = () => {
   const [mediaUri, setMediaUri] = useState(null);
   const [location, setLocation] = useState(null);
   const [city, setCity] = useState("");
+  const [source, setSource] = useState("");
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== "granted") {
         return;
       }
 
@@ -57,12 +60,15 @@ const AddNews = () => {
 
   const reverseGeocode = async (latitude, longitude) => {
     try {
-      const addressData = await LocationGeocoding.reverseGeocodeAsync({ latitude, longitude });
+      const addressData = await LocationGeocoding.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
       const address = addressData[0];
       const city = address.city || address.subregion || address.region || "";
       setCity(city);
     } catch (error) {
-      console.log('Error reverse geocoding:', error);
+      console.log("Error reverse geocoding:", error);
     }
   };
 
@@ -71,43 +77,58 @@ const AddNews = () => {
       alert("Location not available.");
       return;
     }
-  
+
+    if (!source) {
+      alert("Source is required.");
+      return;
+    }
+
     const currentUser = firebase.auth().currentUser;
     const usersRef = firebase.firestore().collection("users").doc(currentUser.uid);
     const doc = await usersRef.get();
-  
+
     if (!doc.exists) {
       alert("User not found.");
       return;
     }
-  
+
     const userRole = doc.data().role;
     let initialStatus = userRole === "journalist" ? "accepted" : "pending";
-  
+
     const newsRef = firebase.firestore().collection("news");
     const newNews = {
       title: title,
       description: description,
       mediaUri: mediaUri,
-      location: new firebase.firestore.GeoPoint(location.coords.latitude, location.coords.longitude),
+      location: new firebase.firestore.GeoPoint(
+        location.coords.latitude,
+        location.coords.longitude
+      ),
       city: city,
       status: initialStatus,
-      date: new Date().toLocaleString()   
+      date: new Date().toLocaleString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      }),
+      source: source,
     };
-  
+
     newsRef
       .add(newNews)
       .then(() => {
         setTitle("");
         setDescription("");
         setMediaUri(null);
+        setSource("");
         alert("News added successfully!");
       })
       .catch((error) => {
         alert("Error adding news: ", error);
       });
   };
-  
 
   const handleUploadMedia = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -138,36 +159,44 @@ const AddNews = () => {
   };
 
   return (
-    <View style={styles.container} onPress={() => Keyboard.dismiss()}>
-      <Text style={styles.label}>Title:</Text>
-      <TextInput
-        style={styles.input}
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-      />
-      <Text style={styles.label}>Description:</Text>
-      <TextInput
-        style={[styles.input, styles.descriptionInput]}
-        value={description}
-        onChangeText={(text) => setDescription(text)}
-        multiline
-        numberOfLines={4}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleUploadMedia}>
-        <Text style={styles.buttonText}>Upload Media</Text>
-      </TouchableOpacity>
-      {mediaUri ? (
-        mediaUri.endsWith(".mov") ? (
-          <Video source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
-        ) : (
-          <Image source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
-        )
-      ) : null}
+    <KeyboardAvoidingView style={styles.container} behavior="padding" onPress={() => Keyboard.dismiss()}>
+      <ScrollView>
+        <Text style={styles.label}>Title:</Text>
+        <TextInput
+          style={styles.input}
+          value={title}
+          onChangeText={(text) => setTitle(text)}
+        />
+        <Text style={styles.label}>Description:</Text>
+        <TextInput
+          style={[styles.input, styles.descriptionInput]}
+          value={description}
+          onChangeText={(text) => setDescription(text)}
+          multiline
+          numberOfLines={4}
+        />
+        <Text style={styles.label}>Source:</Text>
+        <TextInput
+          style={styles.input}
+          value={source}
+          onChangeText={(text) => setSource(text)}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleUploadMedia}>
+          <Text style={styles.buttonText}>Upload Media</Text>
+        </TouchableOpacity>
+        {mediaUri ? (
+          mediaUri.endsWith(".mov") ? (
+            <Video source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+          ) : (
+            <Image source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+          )
+        ) : null}
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Add News</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Add News</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

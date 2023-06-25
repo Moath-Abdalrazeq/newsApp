@@ -73,10 +73,10 @@ const CityNews = ({ city }) => {
             <View style={styles.data}>
               {/* city */}
               <Text>
-                City: <Text style={styles.source}>{item.city}</Text>
+                <Text style={styles.source}>{item.source}</Text>
               </Text>
               <Text> 
-                  Date: <Text style={styles.date}>{item.date}</Text>
+               <Text style={styles.date}>{item.date}</Text>
                   </Text>
             </View>
           </View>

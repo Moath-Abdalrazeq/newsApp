@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -94,12 +95,12 @@ const LatestNews = () => {
                 </Text>
 
                 <View style={styles.data}>
-                  {/* city */}
+                  {/* source */}
                   <Text>
-                    City: <Text style={styles.city}>{item.city}</Text>
+                   <Text style={styles.city}>{item.source}</Text>
                   </Text>
                   <Text> 
-                  Date: <Text style={styles.date}>{item.date}</Text>
+                  <Text style={styles.date}>{item.date}</Text>
                   </Text>
                 </View>
 
