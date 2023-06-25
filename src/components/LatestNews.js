@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -22,7 +23,7 @@ const firebaseConfig = {
   storageBucket: "newsapp-32049.appspot.com",
   messagingSenderId: "109848058571",
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
-  measurementId: "G-KVL2B1SPCG"
+  measurementId: "G-KVL2B1SPCG",
 };
 
 // Initialize Firebase
@@ -44,9 +45,11 @@ const LatestNews = () => {
   const shareNews = async (item) => {
     try {
       await Share.share({
-        message: `${item.title}\n\n${item.description}\n\nPublished on: ${moment(
-          item.publishedAt
-        ).format("MMM Do YY")}\n\nRead more at: ${item.mediaUri}`,
+        message: `${item.title}\n\n${
+          item.description
+        }\n\nPublished on: ${moment(item.publishedAt).format(
+          "MMM Do YY"
+        )}\n\nRead more at: ${item.mediaUri}`,
       });
     } catch (error) {
       console.error(error);
@@ -94,10 +97,10 @@ const LatestNews = () => {
                 <View style={styles.data}>
                   {/* source */}
                   <Text>
-                    source: <Text style={styles.source}>{item.source}</Text>
+                   <Text style={styles.city}>{item.source}</Text>
                   </Text>
-                  <Text style={styles.date}>
-                    {moment(item.publishedAt).format("MMM Do YY")}
+                  <Text> 
+                  <Text style={styles.date}>{item.date}</Text>
                   </Text>
                 </View>
 
@@ -105,11 +108,7 @@ const LatestNews = () => {
                   style={styles.shareButton}
                   onPress={() => shareNews(item)}
                 >
-                  <Ionicons
-                    name="share"
-                    size={35}
-                    color="black"
-                  />
+                  <Ionicons name="share" size={35} color="black" />
                 </Pressable>
               </View>
             </Pressable>
@@ -144,7 +143,6 @@ const LatestNews = () => {
   );
 };
 export default LatestNews;
-
 
 const styles = StyleSheet.create({
   container: {
@@ -192,7 +190,7 @@ const styles = StyleSheet.create({
     color: "#e63946",
     fontSize: 15,
   },
-  source: {
+  city: {
     color: "#e63946",
     fontWeight: "bold",
     fontSize: 18,
@@ -239,13 +237,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   shareButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     width: 40,
     height: 40,
-    marginTop:10,
-    marginLeft:280
+    marginTop: 10,
+    marginLeft: 280,
   },
-  
-  
 });

@@ -8,14 +8,16 @@ import {
   Image,
   Video,
   StyleSheet,
-  Keyboard
+  KeyboardAvoidingView,
+  ScrollView,
+  Keyboard,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
-import * as Location from 'expo-location';
-import * as LocationGeocoding from 'expo-location';
+import * as Location from "expo-location";
+import * as LocationGeocoding from "expo-location";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
@@ -40,11 +42,12 @@ const AddNews = () => {
   const [mediaUri, setMediaUri] = useState(null);
   const [location, setLocation] = useState(null);
   const [city, setCity] = useState("");
+  const [source, setSource] = useState("");
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (status !== "granted") {
         return;
       }
 
@@ -57,12 +60,15 @@ const AddNews = () => {
 
   const reverseGeocode = async (latitude, longitude) => {
     try {
-      const addressData = await LocationGeocoding.reverseGeocodeAsync({ latitude, longitude });
+      const addressData = await LocationGeocoding.reverseGeocodeAsync({
+        latitude,
+        longitude,
+      });
       const address = addressData[0];
       const city = address.city || address.subregion || address.region || "";
       setCity(city);
     } catch (error) {
-      console.log('Error reverse geocoding:', error);
+      console.log("Error reverse geocoding:", error);
     }
   };
 
@@ -72,8 +78,8 @@ const AddNews = () => {
       return;
     }
 
-    if (!city) {
-      alert("City not available.");
+    if (!source) {
+      alert("Source is required.");
       return;
     }
 
@@ -94,9 +100,20 @@ const AddNews = () => {
       title: title,
       description: description,
       mediaUri: mediaUri,
-      location: new firebase.firestore.GeoPoint(location.coords.latitude, location.coords.longitude),
+      location: new firebase.firestore.GeoPoint(
+        location.coords.latitude,
+        location.coords.longitude
+      ),
       city: city,
-      status: initialStatus
+      status: initialStatus,
+      date: new Date().toLocaleString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      }),
+      source: source,
     };
 
     newsRef
@@ -105,6 +122,7 @@ const AddNews = () => {
         setTitle("");
         setDescription("");
         setMediaUri(null);
+        setSource("");
         alert("News added successfully!");
       })
       .catch((error) => {
@@ -126,46 +144,59 @@ const AddNews = () => {
     };
 
     const result = await ImagePicker.launchImageLibraryAsync(mediaLibraryOptions);
-    if (result.cancelled) {
+    if (result.canceled) {
       return;
     }
     if (result.assets.length > 0) {
       const selectedAsset = result.assets[0];
       setMediaUri(selectedAsset.uri);
     }
+
+    // If the city is not available, set it to an empty string
+    if (!city) {
+      setCity("");
+    }
   };
 
   return (
-    <View style={styles.container} onPress={() => Keyboard.dismiss()}>
-      <Text style={styles.label}>Title:</Text>
-      <TextInput
-        style={styles.input}
-        value={title}
-        onChangeText={(text) => setTitle(text)}
-      />
-      <Text style={styles.label}>Description:</Text>
-      <TextInput
-        style={[styles.input, styles.descriptionInput]}
-        value={description}
-        onChangeText={(text) => setDescription(text)}
-        multiline
-        numberOfLines={4}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleUploadMedia}>
-        <Text style={styles.buttonText}>Upload Media</Text>
-      </TouchableOpacity>
-      {mediaUri ? (
-        mediaUri.endsWith(".mov") ? (
-          <Video source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
-        ) : (
-          <Image source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
-        )
-      ) : null}
+    <KeyboardAvoidingView style={styles.container} behavior="padding" onPress={() => Keyboard.dismiss()}>
+      <ScrollView>
+        <Text style={styles.label}>Title:</Text>
+        <TextInput
+          style={styles.input}
+          value={title}
+          onChangeText={(text) => setTitle(text)}
+        />
+        <Text style={styles.label}>Description:</Text>
+        <TextInput
+          style={[styles.input, styles.descriptionInput]}
+          value={description}
+          onChangeText={(text) => setDescription(text)}
+          multiline
+          numberOfLines={4}
+        />
+        <Text style={styles.label}>Source:</Text>
+        <TextInput
+          style={styles.input}
+          value={source}
+          onChangeText={(text) => setSource(text)}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleUploadMedia}>
+          <Text style={styles.buttonText}>Upload Media</Text>
+        </TouchableOpacity>
+        {mediaUri ? (
+          mediaUri.endsWith(".mov") ? (
+            <Video source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+          ) : (
+            <Image source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+          )
+        ) : null}
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Add News</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Add News</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

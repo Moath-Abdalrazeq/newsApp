@@ -22,6 +22,7 @@ const Map = () => {
       markerTitle: "Jenin",
       id: "jenin-marker",
       newsUrl: "JeninNews",
+      livesUrl: "JeninLives"
     },
     {
       latitude: 32.2226,
@@ -32,6 +33,26 @@ const Map = () => {
       id: "nablus-marker",
       newsUrl: "NablusNews",
     },
+    {
+      latitude: 32.4000,
+      longitude: 35.3833,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+      markerTitle: "Tubas",
+      id: "tubas-marker",
+      newsUrl: "TubasNews",
+      livesUrl: "TubasLives"
+    },
+    {
+      latitude: 32.3158,
+      longitude: 35.0286,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+      markerTitle: "Tulkarem",
+      id: "tulkarem-marker",
+      newsUrl: "TulkaremNews",
+      livesUrl: "TulkaremLives"
+    }
     // Add more cities here if needed
   ];
 
@@ -49,6 +70,14 @@ const Map = () => {
       setSelectedMarker(null);
     }
   };
+  const handleLiveStreamsButtonPress = () => {
+    if (selectedMarker) {
+      navigation.navigate(selectedMarker.livesUrl);
+      setSelectedMarker(null);
+    }
+  };
+   
+   
 
   return (
     <View style={styles.container}>
@@ -70,25 +99,27 @@ const Map = () => {
         animationType="slide"
         transparent={true}
       >
-        <View style={styles.modal}>
-          <Text style={styles.modalTitle}>{selectedMarker?.markerTitle}</Text>
-          <View style={styles.buttonContainer}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>{selectedMarker?.markerTitle}</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleNewsButtonPress}
+              >
+                <Text style={styles.modalButtonText}>News</Text>
+              </TouchableOpacity>
+              <TouchableOpacity   onPress={handleLiveStreamsButtonPress} style={styles.modalButton}>
+                <Text style={styles.modalButtonText}>Livestream's</Text>
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity
-              style={styles.modalButton}
-              onPress={handleNewsButtonPress}
+              style={styles.modalCloseButton}
+              onPress={handleCloseModal}
             >
-              <Text style={styles.modalButtonText}>News</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Livestream's</Text>
+              <Text style={styles.modalCloseButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.modalCloseButton}
-            onPress={handleCloseModal}
-          >
-            <Text style={styles.modalCloseButtonText}>Close</Text>
-          </TouchableOpacity>
         </View>
       </Modal>
     </View>
@@ -105,20 +136,25 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
-  modal: {
+  modalBackground: {
+    flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.6)",
-    margin: 20,
     justifyContent: "center",
-    marginTop: 150,
+    alignItems: "center",
+  },
+  modal: {
+    backgroundColor: "#fff",
+    margin: 20,
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
     shadowOpacity: 0.25,
+    backgroundColor: "#fff",
   },
   modalTitle: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000",
     marginBottom: 20,
   },
   modalButton: {

@@ -6,7 +6,7 @@ const Stack = createStackNavigator();
 
   
 export default function ClientScreen() {
-  const user = { isAdmin: false };
+  const user = { isClient: true};
 
   return(       
     <Menu user={user} />
