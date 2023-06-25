@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   View,
-  KeyboardAvoidingView,
   SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
@@ -9,6 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import { firebase } from "../../config";
 import * as DocumentPicker from 'expo-document-picker';
@@ -85,10 +85,7 @@ const JournalistRegistration = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.safeAreaView}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.content}
-        >
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <View style={styles.root}>
             <View style={styles.container}>
               <Text style={{ fontWeight: "bold", fontSize: 23 }}>
@@ -158,13 +155,11 @@ const JournalistRegistration = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </KeyboardAvoidingView>
+        </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
-
-export default JournalistRegistration;
 
 const styles = StyleSheet.create({
   root: {
@@ -173,8 +168,8 @@ const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
   },
-  content: {
-    flex: 1,
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 16,
     paddingVertical: 32,
@@ -225,3 +220,5 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 });
+
+export default JournalistRegistration;

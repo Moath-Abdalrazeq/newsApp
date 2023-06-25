@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text, Button ,Image} from "react-native";
 import React, { useState, useEffect } from "react";
 import { firebase } from "./config";
 import Login from "./src/pages/Login";
@@ -14,18 +14,24 @@ const Stack = createStackNavigator();
 import JournalistScreen from "./src/components/WorkflowScreens/JournalistScreen";
 import AdminScreen from "./src/components/WorkflowScreens/AdminScreen";
 import JeninNews from "./src/components/CitiesNews/JeninNews";
+import JeninLives from "./src/components/LiveStreams/JeninLives";
 import NablusNews from "./src/components/CitiesNews/NablusNews";
 import LatestNews from "./src/components/LatestNews";
 import ClientRegistration from "./src/pages/ClientRegistration";
 import JournalistRegistration from "./src/pages/JournalistRegistration";
-import PushScreen from "./src/components/PushScreen";
-function LocationDeniedScreen() {
+ function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
   };
 
   return (
+    <> 
+    
     <View style={styles.container}>
+    <Image
+                source={require("./assets/images/Logo.png")}
+                style={styles.logo}
+              />
       <Text style={styles.text}>
         Please grant location access to use this app.
       </Text>
@@ -34,6 +40,7 @@ function LocationDeniedScreen() {
         onPress={handleOpenLocationSettings}
       />
     </View>
+    </>
   );
 }
 
@@ -104,10 +111,10 @@ function App() {
         <Stack.Navigator>
           <Stack.Screen name="JournalistScreen" component={JournalistScreen} />
           <Stack.Screen name="JeninNews" component={JeninNews} />
+          <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
-          <Stack.Screen name="Push" component={PushScreen} />
-        </Stack.Navigator>
+         </Stack.Navigator>
       </NavigationContainer>
     );
   } else if (userRole === "client") {
@@ -116,10 +123,10 @@ function App() {
         <Stack.Navigator>
           <Stack.Screen name="ClientScreen" component={ClientScreen} />
           <Stack.Screen name="JeninNews" component={JeninNews} />
+          <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
-          <Stack.Screen name="Push" component={PushScreen} />
-        </Stack.Navigator>
+         </Stack.Navigator>
       </NavigationContainer>
     );
   } else if (userRole === "admin") {
@@ -128,10 +135,10 @@ function App() {
         <Stack.Navigator>
           <Stack.Screen name="AdminScreen" component={AdminScreen} />
           <Stack.Screen name="JeninNews" component={JeninNews} />
+          <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
-          <Stack.Screen name="Push" component={PushScreen} />
-        </Stack.Navigator>
+         </Stack.Navigator>
       </NavigationContainer>
     );
   } else {
@@ -193,5 +200,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     marginBottom: 20,
+  },
+  logo: {
+    marginBottom:40,
+    width: 200,
+    height: 200,
+    resizeMode: "contain",
   },
 });

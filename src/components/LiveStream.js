@@ -1,132 +1,240 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Button } from 'react-native';
- 
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
+import { Camera } from 'expo-camera';
+import * as Location from 'expo-location';
+import * as LocationGeocoding from 'expo-location';
 
- 
-const Livestream = () => {
-   
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import 'firebase/compat/storage';
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
+  authDomain: "newsapp-32049.firebaseapp.com",
+  projectId: "newsapp-32049",
+  storageBucket: "newsapp-32049.appspot.com",
+  messagingSenderId: "109848058571",
+  appId: "1:109848058571:web:2e5322e2a1d8251017594e",
+  measurementId: "G-KVL2B1SPCG"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+const storage = firebase.storage().ref();
+
+export default function Livestream() {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
+  const [isLivestreaming, setIsLivestreaming] = useState(false);
+  const cameraRef = useRef(null);
+  const streamUrlRef = useRef(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  const startLivestream = async () => {
+    if (isLivestreaming) return;
+
+    setIsLivestreaming(true);
+
+    const streamRef = await db.collection('streams').add({
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    const streamId = streamRef.id;
+    streamUrlRef.current = streamId;
+
+    // Generate a valid livestream URL using the stream ID
+    const streamUrl = `https://newsapp.com./live/${streamId}`;
+
+    await streamRef.update({
+      streamUrl,
+    });
+
+    // Get user's location
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Location permission denied');
+      return;
+    }
+
+    const location = await Location.getCurrentPositionAsync({});
+    const city = await reverseGeocode(location.coords.latitude, location.coords.longitude);
+
+    // Update the stream document with the city name
+    await streamRef.update({
+      city,
+    });
+
+    const stream = await cameraRef.current.recordAsync({
+      quality: Camera.Constants.VideoQuality['480p'],
+      maxDuration: 3600,
+    });
+
+    const videoRef = storage.child(`${streamRef.id}.mov`);
+    const snapshot = await videoRef.put(stream.uri, {
+      contentType: 'video/quicktime',
+    });
+
+    const videoUrl = await snapshot.ref.getDownloadURL();
+    await streamRef.update({
+      videoUrl,
+    });
+
+    setIsLivestreaming(false);
+  };
+
+  const stopLivestream = async () => {
+    if (!isLivestreaming) return;
+
+    setIsLivestreaming(false);
+
+    await cameraRef.current.stopRecording();
+
+    const streamId = streamUrlRef.current;
+    const streamRef = db.collection('streams').doc(streamId);
+
+    try {
+      const streamDoc = await streamRef.get();
+      if (!streamDoc.exists) {
+        // Document does not exist, do nothing
+        return;
+      }
+
+      await streamRef.update({
+        // Update the document
+      });
+    } catch (error) {
+      console.log('Error updating stream document:', error);
+    }
+  };
+
+  const reverseGeocode = async (latitude, longitude) => {
+    try {
+      const addressData = await LocationGeocoding.reverseGeocodeAsync({ latitude, longitude });
+      const address = addressData[0];
+      const city = address.city || address.subregion || address.region || '';
+      return city;
+    } catch (error) {
+      console.log('Error reverse geocoding:', error);
+      return '';
+    }
+  };
+
+  const openSettings = () => {
+    Linking.openSettings();
+  };
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+
+  if (hasPermission === false) {
+    return (
+      <View style={styles.permissionContainer}>
+        <Text>No access to camera and mic </Text>
+        <TouchableOpacity style={styles.settingsButton} onPress={openSettings}>
+          <Text style={styles.settingsButtonText}>Open Settings</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-     
+      <Camera
+        ref={cameraRef}
+        style={styles.camera}
+        type={cameraType}
+        ratio="16:9"
+        videoStabilizationMode="auto"
+        whiteBalance="auto"
+      />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.flipButton}
+          onPress={() =>
+            setCameraType(
+              cameraType === Camera.Constants.Type.back
+                ? Camera.Constants.Type.front
+                : Camera.Constants.Type.back
+            )
+          }
+        >
+          <Text style={styles.buttonText}>
+            {cameraType === Camera.Constants.Type.back ? 'Front' : 'Back'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.streamButton,
+            { backgroundColor: isLivestreaming ? 'red' : 'white' },
+          ]}
+          onPress={isLivestreaming ? stopLivestream : startLivestream}
+        >
+          <Text style={[styles.buttonText, { color: isLivestreaming ? 'white' : 'black' }]}>
+            {isLivestreaming ? 'Stop Livestream' : 'Start Livestream'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  player: {
-    height: 300,
-    width: '100%',
+  camera: {
+    flex: 1,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+  },
+  flipButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'white',
+  },
+  streamButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'red',
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  permissionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  settingsButton: {
+    marginTop: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 5,
+    backgroundColor: 'blue',
+  },
+  settingsButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
-
-export default Livestream;
-
-
-
-// import React, { useEffect, useState } from "react";
-// import { Button, View, StyleSheet, Text, TextInput } from 'react-native'
-// import { useNavigation } from '@react-navigation/native';
-// import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-// export default function Livestream(props) {
-//     const navigation = useNavigation();
-//     const onJoinPress = (isHost) => {
-//         navigation.navigate(isHost ? 'HostPage' : 'AudiencePage', {
-//             userID: userID,
-//             userName: userID,
-//             liveID: liveID,
-//         })
-//     }
-//     const [userID, setUserID] = useState('');
-//     const [liveID, setLiveID] = useState('');
-//     useEffect(() => {
-//         setUserID(String(Math.floor(Math.random() * 100000)));
-//         setLiveID(String(Math.floor(Math.random() * 10000)));
-//     }, [])
-//     const insets = useSafeAreaInsets();
-//     return (
-//         <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-//             <Text style={styles.userID}>Your User ID: {userID}</Text>
-//             <Text style={[styles.liveID, styles.leftPadding]}>Live ID:</Text>
-//             <TextInput
-//                 placeholder="Enter the Live ID. e.g. 6666"
-//                 style={[styles.input]}
-//                 onChangeText={text => setLiveID(text.replace(/[^0-9A-Za-z_]/g, ''))}
-//                 maxLength={4}
-//                 value={liveID}
-//             >
-//             </TextInput>
-//             <View style={[styles.buttonLine, styles.leftPadding]}>
-//                 <Button disabled={liveID.length == 0} style={styles.button} title="Start a live" onPress={() => { onJoinPress(true) }} />
-//                 <View style={styles.buttonSpacing} />
-//                 <Button  disabled={liveID.length == 0} style={styles.button} title="Watch a live" onPress={() => { onJoinPress(false) }} />
-//             </View>
-//             {/* <View style={styles.buttonLine}>
-//                 <Button title="Disconnect SDK" onPress={() => { ZegoUIKit.disconnectSDK() }} />
-//             </View> */}
-//         </View>)
-// }
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         justifyContent: 'flex-start',
-//         alignItems: 'flex-start'
-//     },
-//     buttonLine: {
-//         // flex: 1,
-//         flexDirection: 'row',
-//         justifyContent: 'space-between',
-//         alignItems: 'center',
-//         height: 42,
-//     },
-//     buttonSpacing: {
-//         width: 13,
-//     },
-//     input: {
-//         height: 42,
-//         width: 305,
-//         borderWidth: 1,
-//         borderRadius: 9,
-//         borderColor: '#333333',
-//         paddingLeft: 16,
-//         paddingRight: 16,
-//         paddingTop: 10,
-//         paddingBottom: 10,
-//         marginLeft: 35,
-//         marginBottom: 20,
-//     },
-//     userID: {
-//         fontSize: 14,
-//         color: '#2A2A2A',
-//         marginBottom: 27,
-//         paddingBottom: 12,
-//         paddingTop: 12,
-//         paddingLeft: 20,
-//     },
-//     liveID: {
-//         fontSize: 14,
-//         color: '#2A2A2A',
-//         marginBottom: 5,
-//     },
-//     simpleCallTitle: {
-//         color: '#2A2A2A',
-//         fontSize: 21,
-//         width: 330,
-//         fontWeight: 'bold',
-//         marginBottom: 27,
-//     },
-//     button: {
-//         height: 42,
-//         borderRadius: 9,
-//         backgroundColor: '#F4F7FB',
-//     },
-//     leftPadding: {
-//         paddingLeft: 35,
-//     }
-// })

@@ -10,8 +10,7 @@ import LiveStraem from "./LiveStream";
 import AcceptJournalist from "./AdminWorkflow/AcceptJournalist";
 import AdminAcceptNews from "./AdminWorkflow/AdminAcceptNews";
 import profilePageJournalist from "./profilePageJournalist";
-import MainScreen from "./MainScreen";
-const Drawer = createDrawerNavigator();
+ const Drawer = createDrawerNavigator();
 
 export default function Menu({ user }) {
   const handleChangePassword = () => {
@@ -75,7 +74,7 @@ export default function Menu({ user }) {
 
           <TouchableOpacity
             style={{ marginBottom: 20, paddingTop: 20 }}
-            onPress={() => navigation.navigate("MainScreen")}
+            onPress={() => navigation.navigate("LiveStraem")}
           >
             <FontAwesome5
               name="stream"
@@ -185,8 +184,7 @@ export default function Menu({ user }) {
       <Drawer.Screen name="AcceptJournalist" component={AcceptJournalist} />
       <Drawer.Screen name="AdminAcceptNews" component={AdminAcceptNews} />
       <Drawer.Screen name="LiveStraem" component={LiveStraem} />
-      <Drawer.Screen name="MainScreen" component={MainScreen} />
-
+ 
       <Drawer.Screen name="Profile" component={profilePageJournalist} />
     </Drawer.Navigator>
   );
