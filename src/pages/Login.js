@@ -14,7 +14,7 @@ const Login = () => {
     try {
     await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
-      alert("Please fill in your email and password");
+      alert("The Email or Password you entered is invalid. Please try again.");
     }
   };
 
