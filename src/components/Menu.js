@@ -10,6 +10,9 @@ import LiveStraem from "./LiveStream";
 import AcceptJournalist from "./AdminWorkflow/AcceptJournalist";
 import AdminAcceptNews from "./AdminWorkflow/AdminAcceptNews";
 import profilePageJournalist from "./profilePageJournalist";
+import ArchiveNewsPage from "./ArchiveNewsPage";
+import LiveStreamDisplay from "./LiveStreams/LiveStreamDisplay";
+
  const Drawer = createDrawerNavigator();
 
 export default function Menu({ user }) {
@@ -41,6 +44,19 @@ export default function Menu({ user }) {
               style={{ marginLeft: 10 }}
             >
               <Text style={{ fontSize: 20 }}>Latest News</Text>
+            </FontAwesome5>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginBottom: 20, paddingTop: 20 }}
+            onPress={() => navigation.navigate("ArchiveNewsPage")}
+          >
+            <FontAwesome5
+              name="newspaper"
+              size={24}
+              color="black"
+              style={{ marginLeft: 10 }}
+            >
+              <Text style={{ fontSize: 20 }}>ArchiveNewsPage</Text>
             </FontAwesome5>
           </TouchableOpacity>
 
@@ -85,6 +101,20 @@ export default function Menu({ user }) {
               <Text style={{ fontSize: 20 }}>Add LiveStream</Text>
             </FontAwesome5>
           </TouchableOpacity>
+          <TouchableOpacity
+  style={{ marginBottom: 20, paddingTop: 20 }}
+  onPress={() => navigation.navigate("LiveStreamDisplay")}
+>
+  <FontAwesome5
+    name="eye"
+    size={24}
+    color="black"
+    style={{ marginLeft: 10 }}
+  >
+    <Text style={{ fontSize: 20 }}>View Livestream</Text>
+  </FontAwesome5>
+</TouchableOpacity>
+
 
           {user.isJournalist && (
             <TouchableOpacity
@@ -184,8 +214,10 @@ export default function Menu({ user }) {
       <Drawer.Screen name="AcceptJournalist" component={AcceptJournalist} />
       <Drawer.Screen name="AdminAcceptNews" component={AdminAcceptNews} />
       <Drawer.Screen name="LiveStraem" component={LiveStraem} />
- 
       <Drawer.Screen name="Profile" component={profilePageJournalist} />
+      <Drawer.Screen name="ArchiveNewsPage" component={ArchiveNewsPage} />
+      <Drawer.Screen name="LiveStreamDisplay" component={LiveStreamDisplay} />
+
     </Drawer.Navigator>
   );
 }

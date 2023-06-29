@@ -19,6 +19,7 @@ import NablusNews from "./src/components/CitiesNews/NablusNews";
 import LatestNews from "./src/components/LatestNews";
 import ClientRegistration from "./src/pages/ClientRegistration";
 import JournalistRegistration from "./src/pages/JournalistRegistration";
+
  function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
