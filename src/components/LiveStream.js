@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as Location from 'expo-location';
-import * as LocationGeocoding from 'expo-location';
-
+import { v4 as uuidv4 } from 'uuid';
 import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
 
-// Initialize Firebase
+const SERVER_URL = 'http://192.168.1.104:3000'; // Replace with your server IP address
+
+// Replace with your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
   authDomain: "newsapp-32049.firebaseapp.com",
@@ -20,17 +20,16 @@ const firebaseConfig = {
   measurementId: "G-KVL2B1SPCG"
 };
 
-firebase.initializeApp(firebaseConfig);
-
-const db = firebase.firestore();
-const storage = firebase.storage().ref();
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 export default function Livestream() {
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
   const [isLivestreaming, setIsLivestreaming] = useState(false);
+  const [location, setLocation] = useState(null);
   const cameraRef = useRef(null);
-  const streamUrlRef = useRef(null);
 
   useEffect(() => {
     (async () => {
@@ -39,56 +38,32 @@ export default function Livestream() {
     })();
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+        const currentLocation = await Location.getCurrentPositionAsync({});
+        setLocation(currentLocation);
+      }
+    })();
+  }, []);
+
   const startLivestream = async () => {
     if (isLivestreaming) return;
 
     setIsLivestreaming(true);
 
-    const streamRef = await db.collection('streams').add({
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    });
-
-    const streamId = streamRef.id;
-    streamUrlRef.current = streamId;
-
-    // Generate a valid livestream URL using the stream ID
-    const streamUrl = `https://newsapp.com./live/${streamId}`;
-
-    await streamRef.update({
-      streamUrl,
-    });
-
-    // Get user's location
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.log('Location permission denied');
-      return;
+    try {
+      // Make a POST request to start the livestream
+      const response = await fetch(`${SERVER_URL}/livestream/start`, { method: 'POST' });
+      if (response.ok) {
+        console.log('Livestream started');
+      } else {
+        console.log('Failed to start livestream');
+      }
+    } catch (error) {
+      console.log('Error starting livestream:', error);
     }
-
-    const location = await Location.getCurrentPositionAsync({});
-    const city = await reverseGeocode(location.coords.latitude, location.coords.longitude);
-
-    // Update the stream document with the city name
-    await streamRef.update({
-      city,
-    });
-
-    const stream = await cameraRef.current.recordAsync({
-      quality: Camera.Constants.VideoQuality['480p'],
-      maxDuration: 3600,
-    });
-
-    const videoRef = storage.child(`${streamRef.id}.mov`);
-    const snapshot = await videoRef.put(stream.uri, {
-      contentType: 'video/quicktime',
-    });
-
-    const videoUrl = await snapshot.ref.getDownloadURL();
-    await streamRef.update({
-      videoUrl,
-    });
-
-    setIsLivestreaming(false);
   };
 
   const stopLivestream = async () => {
@@ -96,40 +71,100 @@ export default function Livestream() {
 
     setIsLivestreaming(false);
 
-    await cameraRef.current.stopRecording();
-
-    const streamId = streamUrlRef.current;
-    const streamRef = db.collection('streams').doc(streamId);
-
     try {
-      const streamDoc = await streamRef.get();
-      if (!streamDoc.exists) {
-        // Document does not exist, do nothing
-        return;
+      // Make a POST request to stop the livestream
+      const response = await fetch(`${SERVER_URL}/livestream/stop`, { method: 'POST' });
+      if (response.ok) {
+        console.log('Livestream stopped');
+      } else {
+        console.log('Failed to stop livestream');
       }
-
-      await streamRef.update({
-        // Update the document
-      });
     } catch (error) {
-      console.log('Error updating stream document:', error);
-    }
-  };
-
-  const reverseGeocode = async (latitude, longitude) => {
-    try {
-      const addressData = await LocationGeocoding.reverseGeocodeAsync({ latitude, longitude });
-      const address = addressData[0];
-      const city = address.city || address.subregion || address.region || '';
-      return city;
-    } catch (error) {
-      console.log('Error reverse geocoding:', error);
-      return '';
+      console.log('Error stopping livestream:', error);
     }
   };
 
   const openSettings = () => {
     Linking.openSettings();
+  };
+
+  const saveLivestreamToFirestore = async (city, videoURL) => {
+    try {
+      const streamData = {
+        city,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        videoURL,
+      };
+
+      const collectionRef = firebase.firestore().collection('streams');
+      await collectionRef.add(streamData);
+
+      console.log('Livestream saved to Firestore');
+    } catch (error) {
+      console.log('Error saving livestream to Firestore:', error);
+    }
+  };
+
+  const uploadVideoToFirebaseStorage = async (fileUri) => {
+    try {
+      const response = await fetch(fileUri);
+      const blob = await response.blob();
+  
+      const storageRef = firebase.storage().ref();
+      const fileRef = storageRef.child(`livestreams/${uuidv4()}.mp4`);
+  
+      const uploadTask = fileRef.put(blob, { contentType: 'video/mp4' });
+  
+      // Wait for the upload to complete
+      await new Promise((resolve, reject) => {
+        uploadTask.on(
+          'state_changed',
+          null,
+          reject,
+          () => {
+            resolve();
+          }
+        );
+      });
+  
+      const downloadURL = await fileRef.getDownloadURL();
+  
+      console.log('Video uploaded to Firebase Storage');
+      return downloadURL;
+    } catch (error) {
+      console.log('Error uploading video to Firebase Storage:', error);
+      return null;
+    }
+  };
+  
+  const handleLivestream = async () => {
+    if (isLivestreaming) {
+      stopLivestream();
+    } else {
+      startLivestream();
+  
+      if (location) {
+        const { coords } = location;
+        const { latitude, longitude } = coords;
+  
+        try {
+          const reverseGeocode = await Location.reverseGeocodeAsync({ latitude, longitude });
+          const city = reverseGeocode[0].city;
+  
+          const videoUri = `${SERVER_URL}/livestream/video.mp4`; // Replace with the actual video URI from the livestream server
+  
+          const videoURL = await uploadVideoToFirebaseStorage(videoUri);
+          if (videoURL) {
+            // Delay before saving the livestream to Firestore
+            setTimeout(() => {
+              saveLivestreamToFirestore(city, videoURL);
+            }, 5000); // Adjust the delay time as needed (in milliseconds)
+          }
+        } catch (error) {
+          console.log('Error retrieving city name:', error);
+        }
+      }
+    }
   };
 
   if (hasPermission === null) {
@@ -139,7 +174,7 @@ export default function Livestream() {
   if (hasPermission === false) {
     return (
       <View style={styles.permissionContainer}>
-        <Text>No access to camera and mic </Text>
+        <Text>No access to camera and microphone</Text>
         <TouchableOpacity style={styles.settingsButton} onPress={openSettings}>
           <Text style={styles.settingsButtonText}>Open Settings</Text>
         </TouchableOpacity>
@@ -177,7 +212,7 @@ export default function Livestream() {
             styles.streamButton,
             { backgroundColor: isLivestreaming ? 'red' : 'white' },
           ]}
-          onPress={isLivestreaming ? stopLivestream : startLivestream}
+          onPress={handleLivestream}
         >
           <Text style={[styles.buttonText, { color: isLivestreaming ? 'white' : 'black' }]}>
             {isLivestreaming ? 'Stop Livestream' : 'Start Livestream'}
@@ -216,9 +251,9 @@ const styles = StyleSheet.create({
     borderColor: 'red',
   },
   buttonText: {
-    fontSize: 18,
+    color: 'white',
+    fontSize: 16,
     fontWeight: 'bold',
-    color: 'black',
   },
   permissionContainer: {
     flex: 1,
@@ -230,11 +265,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
-    backgroundColor: 'blue',
+    borderWidth: 1,
+    borderColor: 'blue',
   },
   settingsButtonText: {
-    fontSize: 18,
+    color: 'blue',
+    fontSize: 16,
     fontWeight: 'bold',
-    color: 'white',
   },
 });

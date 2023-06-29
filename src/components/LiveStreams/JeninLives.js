@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import LivestreamViewer from './LiveStreamViewer';
+import LivestreamViewer from './LiveStreamDisplay';
 
 export default function LivestreamPage() {
   // Assuming you have the city name available, pass it to the LivestreamViewer component
