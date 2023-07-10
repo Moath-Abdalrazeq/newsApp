@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Pressable, Image, Modal, ScrollView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  Image,
+  Modal,
+  ScrollView,
+} from "react-native";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
- 
+
 const db = firebase.firestore();
 
 const CityNews = ({ city }) => {
@@ -75,9 +83,9 @@ const CityNews = ({ city }) => {
               <Text>
                 <Text style={styles.source}>{item.source}</Text>
               </Text>
-              <Text> 
-               <Text style={styles.date}>{item.date}</Text>
-                  </Text>
+              <Text>
+                <Text style={styles.date}>{item.date}</Text>
+              </Text>
             </View>
           </View>
         </Pressable>

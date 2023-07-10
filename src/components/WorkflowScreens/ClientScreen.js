@@ -1,15 +1,7 @@
 import * as React from "react";
-  import Menu from "../Menu";
-  import { createStackNavigator } from "@react-navigation/stack";
 
-const Stack = createStackNavigator();
-
-  
+import Menu from "../Menu";
 export default function ClientScreen() {
-  const user = { isClient: true};
-
-  return(       
-    <Menu user={user} />
-
-    )  
+  const user = {isClient: true };
+  return <Menu user={user} />;
 }

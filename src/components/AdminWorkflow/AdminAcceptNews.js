@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, Button, StyleSheet, Alert, Image, Modal, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  StyleSheet,
+  Alert,
+  Image,
+  Modal,
+  ScrollView,
+} from "react-native";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 
@@ -11,7 +21,9 @@ const AdminInterface = () => {
   useEffect(() => {
     const fetchPendingNews = async () => {
       const newsRef = firebase.firestore().collection("news");
-      const querySnapshot = await newsRef.where("status", "==", "pending").get();
+      const querySnapshot = await newsRef
+        .where("status", "==", "pending")
+        .get();
       const pendingNewsData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -90,9 +102,14 @@ const AdminInterface = () => {
           <View style={styles.modalContainer}>
             <View style={styles.cardContainer}>
               <Text style={styles.cardTitle}>{selectedNews.title}</Text>
-              <Image source={{ uri: selectedNews.mediaUri }} style={styles.Modalimage} />
+              <Image
+                source={{ uri: selectedNews.mediaUri }}
+                style={styles.Modalimage}
+              />
               <ScrollView style={styles.modalContent}>
-                <Text style={styles.cardDescription}>{selectedNews.description}</Text>
+                <Text style={styles.cardDescription}>
+                  {selectedNews.description}
+                </Text>
               </ScrollView>
               <Button title="Close" onPress={toggleModal} />
             </View>

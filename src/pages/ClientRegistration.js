@@ -11,7 +11,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { firebase } from "../../config";
- 
+
 const ClientRegistration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,14 +30,18 @@ const ClientRegistration = () => {
 
       const status = "active";
 
-      await firebase.firestore().collection("users").doc(userCredential.user.uid).set({
-        firstName,
-        lastName,
-        email,
-        role: "client",
-        status,
-      });
-      
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(userCredential.user.uid)
+        .set({
+          firstName,
+          lastName,
+          email,
+          role: "client",
+          status,
+        });
+
       alert("Verification Email sent");
     } catch (error) {
       alert(error.message);
@@ -46,61 +50,62 @@ const ClientRegistration = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.root}>
-        <SafeAreaView style={styles.safeAreaView}>
+      <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.root}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.content}
           >
             <View style={styles.container}>
-              <Text style={{ fontWeight: "bold", fontSize: 23 }}>Client Sign Up</Text>
-              <View style={{ marginTop: 40 }}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="First Name"
-                  onChangeText={(firstName) => setFirstName(firstName)}
-                  autoCorrect={false}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Last Name"
-                  onChangeText={(lastName) => setLastName(lastName)}
-                  autoCorrect={false}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Email"
-                  onChangeText={(email) => setEmail(email)}
-                  autoCorrect={false}
-                  keyboardType="email-address"
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder="Password"
-                  onChangeText={(password) => setPassword(password)}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  secureTextEntry={true}
-                />
-              </View>
-              <TouchableOpacity
-                onPress={registerClient}
-                style={styles.button}
-              >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 22,
-                    color: "white",
-                  }}
+              <Text style={styles.heading}>Register as a Client</Text>
+              <View style={styles.formContainer}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="First Name"
+                    onChangeText={(firstName) => setFirstName(firstName)}
+                    autoCorrect={false}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Last Name"
+                    onChangeText={(lastName) => setLastName(lastName)}
+                    autoCorrect={false}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    onChangeText={(email) => setEmail(email)}
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    onChangeText={(password) => setPassword(password)}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    secureTextEntry={true}
+                  />
+                </View>
+                <TouchableOpacity
+                  onPress={registerClient}
+                  style={styles.button}
                 >
-                  Register as Client
-                </Text>
-              </TouchableOpacity>
+                  <Text style={styles.buttonText}>Register</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </KeyboardAvoidingView>
-        </SafeAreaView>
-      </View>
+        </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
@@ -108,32 +113,9 @@ const ClientRegistration = () => {
 export default ClientRegistration;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    marginTop: 100,
-  },
-  input: {
-    paddingTop: 20,
-    paddingBottom: 10,
-    width: 400,
-    fontSize: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  button: {
-    marginTop: 120,
-    height: 70,
-    width: 250,
-    backgroundColor: "#026efd",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 50,
-  },
   root: {
     flex: 1,
+    backgroundColor: "#fff",
   },
   safeAreaView: {
     flex: 1,
@@ -141,7 +123,53 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 32,
+    paddingHorizontal: 32,
+  },
+  container: {
+    alignItems: "center",
+  },
+  heading: {
+    fontSize: 30,
+    fontWeight: "bold",
+    marginTop: 50,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  formContainer: {
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  input: {
+    backgroundColor: "#f3f3f3",
+    height: 50,
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    fontSize: 18,
+  },
+  button: {
+    backgroundColor: "#007bff",
+    borderRadius: 10,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    fontSize: 22,
+    color: "#fff",
+    fontWeight: "bold",
   },
 });

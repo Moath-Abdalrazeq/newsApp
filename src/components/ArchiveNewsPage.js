@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
@@ -26,8 +32,13 @@ const ArchivePage = () => {
       });
 
       const newsRef = firebase.firestore().collection("news");
-      const querySnapshot = await newsRef.where("date", "==", formattedDate).get();
-      const filteredNews = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const querySnapshot = await newsRef
+        .where("date", "==", formattedDate)
+        .get();
+      const filteredNews = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
       setFilteredNews(filteredNews);
     } catch (error) {
       console.log("Error filtering news:", error);
@@ -55,7 +66,7 @@ const ArchivePage = () => {
       )}
 
       {filteredNews.length > 0 ? (
-        <View style={styles.newsContainer}>
+        <ScrollView style={styles.newsContainer}>
           {filteredNews.map((news) => (
             <TouchableOpacity
               key={news.id}
@@ -69,9 +80,11 @@ const ArchivePage = () => {
               <Text style={styles.newsSource}>{news.source}</Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
       ) : (
-        <Text style={styles.noNewsText}>No news available for the selected date.</Text>
+        <Text style={styles.noNewsText}>
+          No news available for the selected date.
+        </Text>
       )}
     </View>
   );
@@ -80,47 +93,54 @@ const ArchivePage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: "#fff",
+    padding: 20,
   },
   datePickerButton: {
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 8,
-    marginBottom: 16,
+    borderColor: "#e63946",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+    alignItems: "center",
   },
   datePickerButtonText: {
-    fontSize: 16,
+    color: "#e63946",
+    fontSize: 20,
+    fontWeight: "bold",
   },
   newsContainer: {
-    marginTop: 16,
+    flex: 1,
+    marginTop: 20,
   },
   newsItem: {
+    backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 8,
-    marginBottom: 8,
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
   },
   newsTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 4,
+    marginBottom: 10,
   },
   newsDescription: {
-    fontSize: 16,
-    marginBottom: 4,
+    fontSize: 18,
+    marginBottom: 10,
   },
   newsSource: {
-    fontSize: 14,
-    color: "#888",
+    fontSize: 16,
+    color: "#666",
   },
   noNewsText: {
-    marginTop: 16,
-    fontSize: 16,
+    fontSize: 20,
     fontStyle: "italic",
-    textAlign: "center",
+    color: "#666",
+    alignSelf: "center",
+    marginTop: 100,
   },
 });
 

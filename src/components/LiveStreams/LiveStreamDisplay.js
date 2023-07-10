@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React from "react";
+import { View, Text } from "react-native";
 
 const LiveStreamDisplay = () => {
   // Replace the code below with your implementation to display the live stream
