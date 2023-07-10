@@ -1,15 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Linking } from 'react-native';
-import { Camera } from 'expo-camera';
-import * as Location from 'expo-location';
-import { v4 as uuidv4 } from 'uuid';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
-import 'firebase/compat/storage';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Linking,
+} from "react-native";
+import { Camera } from "expo-camera";
+import * as Location from "expo-location";
+import { v4 as uuidv4 } from "uuid";
+import firebase from "firebase/compat/app";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
 
-const SERVER_URL = 'http://192.168.1.104:3000'; // Replace with your server IP address
+const SERVER_URL = "http://192.168.1.104:3000";  
 
-// Replace with your Firebase configuration
+ 
 const firebaseConfig = {
   apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
   authDomain: "newsapp-32049.firebaseapp.com",
@@ -17,7 +23,7 @@ const firebaseConfig = {
   storageBucket: "newsapp-32049.appspot.com",
   messagingSenderId: "109848058571",
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
-  measurementId: "G-KVL2B1SPCG"
+  measurementId: "G-KVL2B1SPCG",
 };
 
 if (firebase.apps.length === 0) {
@@ -34,14 +40,14 @@ export default function Livestream() {
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setHasPermission(status === "granted");
     })();
   }, []);
 
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
+      if (status === "granted") {
         const currentLocation = await Location.getCurrentPositionAsync({});
         setLocation(currentLocation);
       }
@@ -55,14 +61,16 @@ export default function Livestream() {
 
     try {
       // Make a POST request to start the livestream
-      const response = await fetch(`${SERVER_URL}/livestream/start`, { method: 'POST' });
+      const response = await fetch(`${SERVER_URL}/livestream/start`, {
+        method: "POST",
+      });
       if (response.ok) {
-        console.log('Livestream started');
+        console.log("Livestream started");
       } else {
-        console.log('Failed to start livestream');
+        console.log("Failed to start livestream");
       }
     } catch (error) {
-      console.log('Error starting livestream:', error);
+      console.log("Error starting livestream:", error);
     }
   };
 
@@ -73,14 +81,16 @@ export default function Livestream() {
 
     try {
       // Make a POST request to stop the livestream
-      const response = await fetch(`${SERVER_URL}/livestream/stop`, { method: 'POST' });
+      const response = await fetch(`${SERVER_URL}/livestream/stop`, {
+        method: "POST",
+      });
       if (response.ok) {
-        console.log('Livestream stopped');
+        console.log("Livestream stopped");
       } else {
-        console.log('Failed to stop livestream');
+        console.log("Failed to stop livestream");
       }
     } catch (error) {
-      console.log('Error stopping livestream:', error);
+      console.log("Error stopping livestream:", error);
     }
   };
 
@@ -96,12 +106,12 @@ export default function Livestream() {
         videoURL,
       };
 
-      const collectionRef = firebase.firestore().collection('streams');
+      const collectionRef = firebase.firestore().collection("streams");
       await collectionRef.add(streamData);
 
-      console.log('Livestream saved to Firestore');
+      console.log("Livestream saved to Firestore");
     } catch (error) {
-      console.log('Error saving livestream to Firestore:', error);
+      console.log("Error saving livestream to Firestore:", error);
     }
   };
 
@@ -109,50 +119,48 @@ export default function Livestream() {
     try {
       const response = await fetch(fileUri);
       const blob = await response.blob();
-  
+
       const storageRef = firebase.storage().ref();
       const fileRef = storageRef.child(`livestreams/${uuidv4()}.mp4`);
-  
-      const uploadTask = fileRef.put(blob, { contentType: 'video/mp4' });
-  
+
+      const uploadTask = fileRef.put(blob, { contentType: "video/mp4" });
+
       // Wait for the upload to complete
       await new Promise((resolve, reject) => {
-        uploadTask.on(
-          'state_changed',
-          null,
-          reject,
-          () => {
-            resolve();
-          }
-        );
+        uploadTask.on("state_changed", null, reject, () => {
+          resolve();
+        });
       });
-  
+
       const downloadURL = await fileRef.getDownloadURL();
-  
-      console.log('Video uploaded to Firebase Storage');
+
+      console.log("Video uploaded to Firebase Storage");
       return downloadURL;
     } catch (error) {
-      console.log('Error uploading video to Firebase Storage:', error);
+      console.log("Error uploading video to Firebase Storage:", error);
       return null;
     }
   };
-  
+
   const handleLivestream = async () => {
     if (isLivestreaming) {
       stopLivestream();
     } else {
       startLivestream();
-  
+
       if (location) {
         const { coords } = location;
         const { latitude, longitude } = coords;
-  
+
         try {
-          const reverseGeocode = await Location.reverseGeocodeAsync({ latitude, longitude });
+          const reverseGeocode = await Location.reverseGeocodeAsync({
+            latitude,
+            longitude,
+          });
           const city = reverseGeocode[0].city;
-  
+
           const videoUri = `${SERVER_URL}/livestream/video.mp4`; // Replace with the actual video URI from the livestream server
-  
+
           const videoURL = await uploadVideoToFirebaseStorage(videoUri);
           if (videoURL) {
             // Delay before saving the livestream to Firestore
@@ -161,7 +169,7 @@ export default function Livestream() {
             }, 5000); // Adjust the delay time as needed (in milliseconds)
           }
         } catch (error) {
-          console.log('Error retrieving city name:', error);
+          console.log("Error retrieving city name:", error);
         }
       }
     }
@@ -204,18 +212,23 @@ export default function Livestream() {
           }
         >
           <Text style={styles.buttonText}>
-            {cameraType === Camera.Constants.Type.back ? 'Front' : 'Back'}
+            {cameraType === Camera.Constants.Type.back ? "Front" : "Back"}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.streamButton,
-            { backgroundColor: isLivestreaming ? 'red' : 'white' },
+            { backgroundColor: isLivestreaming ? "red" : "white" },
           ]}
           onPress={handleLivestream}
         >
-          <Text style={[styles.buttonText, { color: isLivestreaming ? 'white' : 'black' }]}>
-            {isLivestreaming ? 'Stop Livestream' : 'Start Livestream'}
+          <Text
+            style={[
+              styles.buttonText,
+              { color: isLivestreaming ? "white" : "black" },
+            ]}
+          >
+            {isLivestreaming ? "Stop Livestream" : "Start Livestream"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -231,9 +244,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 20,
   },
   flipButton: {
@@ -241,24 +254,24 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: "white",
   },
   streamButton: {
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'red',
+    borderColor: "red",
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   permissionContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   settingsButton: {
     marginTop: 20,
@@ -266,11 +279,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: 'blue',
+    borderColor: "blue",
   },
   settingsButtonText: {
-    color: 'blue',
+    color: "blue",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

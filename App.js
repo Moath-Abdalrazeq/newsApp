@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StyleSheet, View, Text, Button ,Image} from "react-native";
+import { StyleSheet, View, Text, Button, Image } from "react-native";
 import React, { useState, useEffect } from "react";
 import { firebase } from "./config";
 import Login from "./src/pages/Login";
@@ -16,31 +16,32 @@ import AdminScreen from "./src/components/WorkflowScreens/AdminScreen";
 import JeninNews from "./src/components/CitiesNews/JeninNews";
 import JeninLives from "./src/components/LiveStreams/JeninLives";
 import NablusNews from "./src/components/CitiesNews/NablusNews";
+import TubasNews from "./src/components/CitiesNews/TubasNews";
+import TulkaremNews from "./src/components/CitiesNews/TulkaremNews";
 import LatestNews from "./src/components/LatestNews";
 import ClientRegistration from "./src/pages/ClientRegistration";
 import JournalistRegistration from "./src/pages/JournalistRegistration";
 
- function LocationDeniedScreen() {
+function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
     Linking.openSettings();
   };
 
   return (
-    <> 
-    
-    <View style={styles.container}>
-    <Image
-                source={require("./assets/images/Logo.png")}
-                style={styles.logo}
-              />
-      <Text style={styles.text}>
-        Please grant location access to use this app.
-      </Text>
-      <Button
-        title="Open Location Settings"
-        onPress={handleOpenLocationSettings}
-      />
-    </View>
+    <>
+      <View style={styles.container}>
+        <Image
+          source={require("./assets/images/Logo.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.text}>
+          Please grant location access to use this app.
+        </Text>
+        <Button
+          title="Open Location Settings"
+          onPress={handleOpenLocationSettings}
+        />
+      </View>
     </>
   );
 }
@@ -114,8 +115,10 @@ function App() {
           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
+          <Stack.Screen name="TubasNews" component={TubasNews} />
+          <Stack.Screen name="TulkaremNews" component={TulkaremNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
-         </Stack.Navigator>
+        </Stack.Navigator>
       </NavigationContainer>
     );
   } else if (userRole === "client") {
@@ -126,8 +129,10 @@ function App() {
           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
+          <Stack.Screen name="TubasNews" component={TubasNews} />
+          <Stack.Screen name="TulkaremNews" component={TulkaremNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
-         </Stack.Navigator>
+        </Stack.Navigator>
       </NavigationContainer>
     );
   } else if (userRole === "admin") {
@@ -138,8 +143,10 @@ function App() {
           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
+          <Stack.Screen name="TubasNews" component={TubasNews} />
+          <Stack.Screen name="TulkaremNews" component={TulkaremNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
-         </Stack.Navigator>
+        </Stack.Navigator>
       </NavigationContainer>
     );
   } else {
@@ -203,7 +210,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   logo: {
-    marginBottom:40,
+    marginBottom: 40,
     width: 200,
     height: 200,
     resizeMode: "contain",

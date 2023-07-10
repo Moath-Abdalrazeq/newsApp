@@ -1,8 +1,6 @@
 import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
- 
- 
 
 const Stack = createStackNavigator();
 
@@ -34,33 +32,42 @@ const Registration = ({ navigation }) => {
   );
 };
 
- 
 export default Registration;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F5F5F5",
   },
   title: {
-    fontSize: 24,
+    fontSize: 36,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 30,
+    color: "#363636",
   },
   button: {
-    backgroundColor: "#026efd",
-    width: 250,
-    height: 50,
+    backgroundColor: "#026EFD",
+    width: 300,
+    height: 60,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 20,
+    shadowColor: "#026EFD",
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    elevation: 5,
   },
   buttonText: {
     color: "white",
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
+    textTransform: "uppercase",
   },
 });
-
- 

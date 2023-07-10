@@ -6,7 +6,6 @@ const App = () => {
   return (
     <View>
       <CityNews city="Nablus" />
-    
     </View>
   );
 };

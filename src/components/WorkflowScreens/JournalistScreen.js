@@ -1,16 +1,9 @@
 import * as React from "react";
-  import Menu from "../Menu";
-  import { createStackNavigator } from "@react-navigation/stack";
-
-const Stack = createStackNavigator();
-
-  
+import Menu from "../Menu";
+ 
+ 
 export default function JournalistScreen() {
-  const user = { isAdmin: false , isJournalist: true};
+  const user = { isAdmin: false, isJournalist: true };
 
-  return(       
-    <Menu user={user} />
-
-
-    )  
+  return <Menu user={user} />;
 }

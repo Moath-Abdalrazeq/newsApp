@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from "react-native";
 import { firebase } from "../../config";
-import * as DocumentPicker from 'expo-document-picker';
+import * as DocumentPicker from "expo-document-picker";
 
 const JournalistRegistration = () => {
   const [email, setEmail] = useState("");
@@ -25,7 +25,7 @@ const JournalistRegistration = () => {
   const pickDocument = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
-        type: 'application/pdf',
+        type: "application/pdf",
       });
 
       if (!result.cancelled) {
@@ -33,7 +33,7 @@ const JournalistRegistration = () => {
         setSelectedFile({ uri: result.uri, filename });
       }
     } catch (error) {
-      console.log('Error picking document:', error);
+      console.log("Error picking document:", error);
     }
   };
 
@@ -88,10 +88,12 @@ const JournalistRegistration = () => {
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
           <View style={styles.root}>
             <View style={styles.container}>
-              <Text style={{ fontWeight: "bold", fontSize: 23 }}>
-                Journalist Sign Up
+              <Text
+                style={{ fontWeight: "bold", fontSize: 30, marginBottom: 30 }}
+              >
+                Register as a journalist
               </Text>
-              <View style={{ marginTop: 40 }}>
+              <View style={styles.formContainer}>
                 <TextInput
                   style={styles.input}
                   placeholder="First Name"
@@ -110,6 +112,7 @@ const JournalistRegistration = () => {
                   onChangeText={setEmail}
                   autoCorrect={false}
                   keyboardType="email-address"
+                  autoCapitalize="none"
                 />
                 <TextInput
                   style={styles.input}
@@ -131,28 +134,33 @@ const JournalistRegistration = () => {
                   onChangeText={setOrganization}
                   autoCorrect={false}
                 />
-              </View>
-              <View style={styles.uploadSection}>
-                <Text style={styles.uploadLabel}>Upload CV</Text>
-                <TouchableOpacity onPress={pickDocument} style={styles.uploadButton}>
-                  <Text style={styles.uploadButtonText}>Choose PDF</Text>
-                </TouchableOpacity>
-                {selectedFile && (
-                  <View style={styles.fileName}>
-                    <Text>Selected file: {getFilename()}</Text>
-                  </View>
-                )}
-              </View>
-              <TouchableOpacity
-                onPress={registerJournalist}
-                style={styles.button}
-              >
-                <Text
-                  style={{ fontWeight: "bold", fontSize: 22, color: "white" }}
+                <View style={styles.uploadSection}>
+                  <Text style={styles.uploadLabel}>Upload your CV (PDF)</Text>
+                  <TouchableOpacity
+                    onPress={pickDocument}
+                    style={styles.uploadButton}
+                  >
+                    <Text style={styles.uploadButtonText}>Choose PDF</Text>
+                  </TouchableOpacity>
+                  {selectedFile && (
+                    <View style={styles.fileName}>
+                      <Text style={styles.fileNameText}>
+                        Selected file: {getFilename()}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+                <TouchableOpacity
+                  onPress={registerJournalist}
+                  style={styles.button}
                 >
-                  Register as Journalist
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{ fontWeight: "bold", fontSize: 22, color: "white" }}
+                  >
+                    Register
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -164,6 +172,7 @@ const JournalistRegistration = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    backgroundColor: "#f2f2f2",
   },
   safeAreaView: {
     flex: 1,
@@ -172,52 +181,72 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 16,
-    paddingVertical: 32,
+    paddingVertical: 20,
   },
   container: {
     flex: 1,
     alignItems: "center",
-    marginTop: 10,
+    justifyContent: "center",
+  },
+  formContainer: {
+    width: "100%",
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   input: {
-    paddingTop: 20,
-    paddingBottom: 10,
-    width: 400,
-    fontSize: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
-    marginBottom: 10,
-    textAlign: "center",
+    height: 50,
+    width: "100%",
+    backgroundColor: "#f3f3f3",
+    borderRadius: 5,
+    paddingHorizontal: 15,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: "#d9d9d9",
   },
-  uploadSection: {
+  button: {
+    backgroundColor: "#007bff",
     alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    borderRadius: 5,
     marginTop: 20,
   },
+  uploadSection: {
+    marginVertical: 20,
+  },
   uploadLabel: {
+    fontWeight: "bold",
     fontSize: 16,
-    marginBottom: 5,
+    marginBottom: 10,
   },
   uploadButton: {
-    backgroundColor: "#026efd",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    backgroundColor: "#007bff",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
     borderRadius: 5,
     marginTop: 10,
   },
   uploadButtonText: {
+    fontWeight: "bold",
+    fontSize: 18,
     color: "white",
   },
   fileName: {
-    marginTop: 5,
+    marginTop: 10,
   },
-  button: {
-    marginTop: 50,
-    height: 70,
-    width: 250,
-    backgroundColor: "#026efd",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 50,
+  fileNameText: {
+    fontSize: 16,
   },
 });
 

@@ -5,7 +5,7 @@ import CityNews from "./CityNews";
 const App = () => {
   return (
     <View>
-      <CityNews city="Jenin" />
+      <CityNews city="TulkaremNews" />
     </View>
   );
 };
