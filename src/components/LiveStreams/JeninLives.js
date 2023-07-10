@@ -1,10 +1,10 @@
-import React from 'react';
-import { View } from 'react-native';
-import LivestreamViewer from './LiveStreamViewer';
+import React from "react";
+import { View } from "react-native";
+import LivestreamViewer from "./LiveStreamDisplay";
 
 export default function LivestreamPage() {
   // Assuming you have the city name available, pass it to the LivestreamViewer component
-  const city = 'Talfeet';
+  const city = "Talfeet";
 
   return (
     <View style={{ flex: 1 }}>

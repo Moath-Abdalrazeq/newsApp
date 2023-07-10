@@ -26,7 +26,7 @@ const firebaseConfig = {
   storageBucket: "newsapp-32049.appspot.com",
   messagingSenderId: "109848058571",
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
-  measurementId: "G-KVL2B1SPCG"
+  measurementId: "G-KVL2B1SPCG",
 };
 
 // Initialize Firebase
@@ -84,7 +84,10 @@ const AddNews = () => {
     }
 
     const currentUser = firebase.auth().currentUser;
-    const usersRef = firebase.firestore().collection("users").doc(currentUser.uid);
+    const usersRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(currentUser.uid);
     const doc = await usersRef.get();
 
     if (!doc.exists) {
@@ -110,8 +113,6 @@ const AddNews = () => {
         year: "numeric",
         month: "long",
         day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
       }),
       source: source,
     };
@@ -131,7 +132,8 @@ const AddNews = () => {
   };
 
   const handleUploadMedia = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.granted === false) {
       Alert.alert("Permission to access media library is required!");
       return;
@@ -143,7 +145,9 @@ const AddNews = () => {
       quality: 1,
     };
 
-    const result = await ImagePicker.launchImageLibraryAsync(mediaLibraryOptions);
+    const result = await ImagePicker.launchImageLibraryAsync(
+      mediaLibraryOptions
+    );
     if (result.canceled) {
       return;
     }
@@ -159,7 +163,11 @@ const AddNews = () => {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding" onPress={() => Keyboard.dismiss()}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior="padding"
+      onPress={() => Keyboard.dismiss()}
+    >
       <ScrollView>
         <Text style={styles.label}>Title:</Text>
         <TextInput
@@ -186,9 +194,17 @@ const AddNews = () => {
         </TouchableOpacity>
         {mediaUri ? (
           mediaUri.endsWith(".mov") ? (
-            <Video source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+            <Video
+              source={{ uri: mediaUri }}
+              style={styles.media}
+              resizeMode="contain"
+            />
           ) : (
-            <Image source={{ uri: mediaUri }} style={styles.media} resizeMode="contain" />
+            <Image
+              source={{ uri: mediaUri }}
+              style={styles.media}
+              resizeMode="contain"
+            />
           )
         ) : null}
 
@@ -203,42 +219,42 @@ const AddNews = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#F5F5F5",
+    padding: 20,
   },
   label: {
-    fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 8,
+    fontSize: 16,
+    marginBottom: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 8,
-    marginBottom: 16,
+    borderColor: "#D3D3D3",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 20,
+    backgroundColor: "#FFFFFF",
   },
   descriptionInput: {
     height: 120,
     textAlignVertical: "top",
   },
   button: {
-    backgroundColor: "#007aff",
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 8,
+    backgroundColor: "#007AFF",
+    padding: 15,
+    borderRadius: 5,
     marginBottom: 20,
   },
   buttonText: {
-    color: "#fff",
-    fontSize: 18,
+    color: "#FFFFFF",
     fontWeight: "bold",
     textAlign: "center",
+    fontSize: 16,
   },
   media: {
     width: "100%",
     height: 200,
-    marginBottom: 16,
+    marginBottom: 20,
   },
 });
 

@@ -10,21 +10,13 @@ import LiveStraem from "./LiveStream";
 import AcceptJournalist from "./AdminWorkflow/AcceptJournalist";
 import AdminAcceptNews from "./AdminWorkflow/AdminAcceptNews";
 import profilePageJournalist from "./profilePageJournalist";
- const Drawer = createDrawerNavigator();
+import ArchiveNewsPage from "./ArchiveNewsPage";
+import LiveStreamDisplay from "./LiveStreams/LiveStreamDisplay";
+import SettingsPage from "../pages/SettingsPage";
+
+const Drawer = createDrawerNavigator();
 
 export default function Menu({ user }) {
-  const handleChangePassword = () => {
-    firebase
-      .auth()
-      .sendPasswordResetEmail(firebase.auth().currentUser.email)
-      .then(() => {
-        alert("Password reset email sent successfully");
-      })
-      .catch((error) => {
-        alert(error);
-      });
-  };
-
   return (
     <Drawer.Navigator
       useLegacyImplementation
@@ -43,6 +35,19 @@ export default function Menu({ user }) {
               <Text style={{ fontSize: 20 }}>Latest News</Text>
             </FontAwesome5>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginBottom: 20, paddingTop: 20 }}
+            onPress={() => navigation.navigate("ArchiveNewsPage")}
+          >
+            <FontAwesome5
+              name="newspaper"
+              size={24}
+              color="black"
+              style={{ marginLeft: 10 }}
+            >
+              <Text style={{ fontSize: 20 }}>ArchiveNewsPage</Text>
+            </FontAwesome5>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={{ marginBottom: 20, paddingTop: 20 }}
@@ -57,54 +62,54 @@ export default function Menu({ user }) {
               <Text style={{ fontSize: 20 }}>Map</Text>
             </FontAwesome5>
           </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{ marginBottom: 20, paddingTop: 20 }}
-            onPress={() => navigation.navigate("AddNews")}
-          >
-            <FontAwesome5
-              name="plus"
-              size={24}
-              color="black"
-              style={{ marginLeft: 10 }}
-            >
-              <Text style={{ fontSize: 20 }}>Add news</Text>
-            </FontAwesome5>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{ marginBottom: 20, paddingTop: 20 }}
-            onPress={() => navigation.navigate("LiveStraem")}
-          >
-            <FontAwesome5
-              name="stream"
-              size={24}
-              color="black"
-              style={{ marginLeft: 10 }}
-            >
-              <Text style={{ fontSize: 20 }}>Add LiveStream</Text>
-            </FontAwesome5>
-          </TouchableOpacity>
-
-          {user.isJournalist && (
-            <TouchableOpacity
-              style={{ marginBottom: 20, paddingTop: 20 }}
-              onPress={() => navigation.navigate("Profile")}
-            >
-              <FontAwesome5
-                name="user"
-                size={24}
-                color="black"
-                style={{ marginLeft: 10 }}
+          {(user.isJournalist   || user.isClient)  && (
+            <>
+              <TouchableOpacity
+                style={{ marginBottom: 20, paddingTop: 20 }}
+                onPress={() => navigation.navigate("AddNews")}
               >
-                <Text style={{ fontSize: 20 }}>Profile</Text>
-              </FontAwesome5>
-            </TouchableOpacity>
+                <FontAwesome5
+                  name="plus"
+                  size={24}
+                  color="black"
+                  style={{ marginLeft: 10 }}
+                >
+                  <Text style={{ fontSize: 20 }}>Add news</Text>
+                </FontAwesome5>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ marginBottom: 20, paddingTop: 20 }}
+                onPress={() => navigation.navigate("LiveStraem")}
+              >
+                <FontAwesome5
+                  name="stream"
+                  size={24}
+                  color="black"
+                  style={{ marginLeft: 10 }}
+                >
+                  <Text style={{ fontSize: 20 }}>Add LiveStream</Text>
+                </FontAwesome5>
+              </TouchableOpacity>
+            </>
           )}
+          <TouchableOpacity
+            style={{ marginBottom: 20, paddingTop: 20 }}
+            onPress={() => navigation.navigate("LiveStreamDisplay")}
+          >
+            <FontAwesome5
+              name="eye"
+              size={24}
+              color="black"
+              style={{ marginLeft: 10 }}
+            >
+              <Text style={{ fontSize: 20 }}>View Livestream</Text>
+            </FontAwesome5>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={{ marginBottom: 20, paddingTop: 20 }}
-            onPress={() => navigation.navigate("")}
+            onPress={() => navigation.navigate("SettingsPage")}
           >
             <FontAwesome5
               name="cog"
@@ -113,20 +118,6 @@ export default function Menu({ user }) {
               style={{ marginLeft: 10 }}
             >
               <Text style={{ fontSize: 20 }}>Settings</Text>
-            </FontAwesome5>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{ marginBottom: 20, paddingTop: 20 }}
-            onPress={handleChangePassword}
-          >
-            <FontAwesome5
-              name="key"
-              size={24}
-              color="black"
-              style={{ marginLeft: 10 }}
-            >
-              <Text style={{ fontSize: 20 }}>Change Password</Text>
             </FontAwesome5>
           </TouchableOpacity>
 
@@ -184,8 +175,10 @@ export default function Menu({ user }) {
       <Drawer.Screen name="AcceptJournalist" component={AcceptJournalist} />
       <Drawer.Screen name="AdminAcceptNews" component={AdminAcceptNews} />
       <Drawer.Screen name="LiveStraem" component={LiveStraem} />
- 
       <Drawer.Screen name="Profile" component={profilePageJournalist} />
+      <Drawer.Screen name="ArchiveNewsPage" component={ArchiveNewsPage} />
+      <Drawer.Screen name="LiveStreamDisplay" component={LiveStreamDisplay} />
+      <Drawer.Screen name="SettingsPage" component={SettingsPage} />
     </Drawer.Navigator>
   );
 }

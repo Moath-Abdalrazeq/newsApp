@@ -1,12 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Linking } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Linking,
+  RefreshControl,
+} from "react-native";
 import { firebase } from "../../../config";
 
 const AdminDashboard = () => {
   const [pendingRegistrations, setPendingRegistrations] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    const fetchPendingRegistrations = async () => {
+    fetchPendingRegistrations();
+  }, []);
+
+  const fetchPendingRegistrations = async () => {
+    try {
       const registrationsSnapshot = await firebase
         .firestore()
         .collection("users")
@@ -20,19 +33,32 @@ const AdminDashboard = () => {
       }));
 
       setPendingRegistrations(registrations);
-    };
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
+  const onRefresh = () => {
+    setRefreshing(true);
     fetchPendingRegistrations();
-  }, []);
+  };
 
   const acceptRegistration = async (registrationId) => {
     try {
-      await firebase.firestore().collection("users").doc(registrationId).update({
-        status: "active",
-      });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(registrationId)
+        .update({
+          status: "active",
+        });
 
       // Send acceptance email to the journalist
-      const registration = pendingRegistrations.find((registration) => registration.id === registrationId);
+      const registration = pendingRegistrations.find(
+        (registration) => registration.id === registrationId
+      );
 
       await firebase.auth().sendPasswordResetEmail(registration.email);
 
@@ -49,9 +75,13 @@ const AdminDashboard = () => {
 
   const rejectRegistration = async (registrationId) => {
     try {
-      await firebase.firestore().collection("users").doc(registrationId).update({
-        status: "rejected",
-      });
+      await firebase
+        .firestore()
+        .collection("users")
+        .doc(registrationId)
+        .update({
+          status: "rejected",
+        });
 
       // Send rejection email to the journalist
       const registration = pendingRegistrations.find(
@@ -74,7 +104,11 @@ const AdminDashboard = () => {
   const renderRegistrationItem = (registration) => {
     const viewCV = async () => {
       try {
-        const userDoc = await firebase.firestore().collection("users").doc(registration.id).get();
+        const userDoc = await firebase
+          .firestore()
+          .collection("users")
+          .doc(registration.id)
+          .get();
         const user = userDoc.data();
 
         if (user.cv) {
@@ -89,11 +123,10 @@ const AdminDashboard = () => {
 
     return (
       <View style={styles.registrationItem} key={registration.id}>
-        <Text style={styles.name}>{`${registration.firstName} ${registration.lastName}`}</Text>
-        <TouchableOpacity
-          style={styles.viewCVButton}
-          onPress={viewCV}
-        >
+        <Text
+          style={styles.name}
+        >{`${registration.firstName} ${registration.lastName}`}</Text>
+        <TouchableOpacity style={styles.viewCVButton} onPress={viewCV}>
           <Text style={styles.viewCVButtonText}>View CV</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -113,12 +146,19 @@ const AdminDashboard = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Text style={styles.title}>Pending Registrations</Text>
       {pendingRegistrations.length > 0 ? (
         pendingRegistrations.map(renderRegistrationItem)
       ) : (
-        <Text style={styles.noRegistrationsText}>No pending registrations.</Text>
+        <Text style={styles.noRegistrationsText}>
+          No pending registrations.
+        </Text>
       )}
     </ScrollView>
   );
@@ -129,33 +169,38 @@ export default AdminDashboard;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
     padding: 16,
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 16,
+    color: "#333",
+    textAlign: "center",
   },
   registrationItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: 16,
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: "#f1f1f1",
+    paddingVertical: 16,
+    backgroundColor: "#f7f7f7",
     borderRadius: 8,
   },
   name: {
     flex: 1,
-    marginRight: 8,
+    marginRight: 4,
+    fontSize: 16,
+    fontWeight: "bold",
   },
   viewCVButton: {
     backgroundColor: "#4CAF50",
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 4,
-    marginRight:6
+    marginRight: 6,
   },
   acceptButton: {
     backgroundColor: "#026efd",
@@ -173,18 +218,23 @@ const styles = StyleSheet.create({
   viewCVButtonText: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 16,
   },
   acceptButtonText: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 16,
   },
   rejectButtonText: {
     color: "white",
     fontWeight: "bold",
+    fontSize: 16,
   },
   noRegistrationsText: {
     fontStyle: "italic",
     textAlign: "center",
     marginTop: 32,
+    fontSize: 16,
+    color: "#666",
   },
 });
