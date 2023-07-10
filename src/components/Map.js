@@ -22,7 +22,7 @@ const Map = () => {
       markerTitle: "Jenin",
       id: "jenin-marker",
       newsUrl: "JeninNews",
-      livesUrl: "JeninLives"
+      livesUrl: "JeninLives",
     },
     {
       latitude: 32.2226,
@@ -34,14 +34,14 @@ const Map = () => {
       newsUrl: "NablusNews",
     },
     {
-      latitude: 32.4000,
-      longitude: 35.3833,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      latitude: 32.3104,
+      longitude: 35.3688,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
       markerTitle: "Tubas",
       id: "tubas-marker",
       newsUrl: "TubasNews",
-      livesUrl: "TubasLives"
+      livesUrl: "TubasLives",
     },
     {
       latitude: 32.3158,
@@ -51,8 +51,8 @@ const Map = () => {
       markerTitle: "Tulkarem",
       id: "tulkarem-marker",
       newsUrl: "TulkaremNews",
-      livesUrl: "TulkaremLives"
-    }
+      livesUrl: "TulkaremLives",
+    },
     // Add more cities here if needed
   ];
 
@@ -76,8 +76,6 @@ const Map = () => {
       setSelectedMarker(null);
     }
   };
-   
-   
 
   return (
     <View style={styles.container}>
@@ -109,7 +107,10 @@ const Map = () => {
               >
                 <Text style={styles.modalButtonText}>News</Text>
               </TouchableOpacity>
-              <TouchableOpacity   onPress={handleLiveStreamsButtonPress} style={styles.modalButton}>
+              <TouchableOpacity
+                onPress={handleLiveStreamsButtonPress}
+                style={styles.modalButton}
+              >
                 <Text style={styles.modalButtonText}>Livestream's</Text>
               </TouchableOpacity>
             </View>

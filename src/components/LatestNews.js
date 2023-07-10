@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -9,6 +8,7 @@ import {
   Modal,
   ScrollView,
   Share,
+  RefreshControl,
 } from "react-native";
 import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
@@ -23,7 +23,7 @@ const firebaseConfig = {
   storageBucket: "newsapp-32049.appspot.com",
   messagingSenderId: "109848058571",
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
-  measurementId: "G-KVL2B1SPCG",
+  measurementId: "G-KVL2B1SPCG"
 };
 
 // Initialize Firebase
@@ -36,6 +36,8 @@ const db = firebase.firestore();
 const LatestNews = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedNews, setSelectedNews] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
+  const [news, setNews] = useState([]);
 
   const toggleModal = (item) => {
     setSelectedNews(item);
@@ -56,24 +58,48 @@ const LatestNews = () => {
     }
   };
 
-  const [news, setNews] = useState([]);
+  const fetchNews = async () => {
+    try {
+      setRefreshing(true);
+      const querySnapshot = await db
+        .collection("news")
+        .where("status", "==", "accepted")
+        .get();
+
+      const newsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setNews(newsData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = db
       .collection("news")
       .where("status", "==", "accepted")
       .onSnapshot((querySnapshot) => {
-        const news = [];
-        querySnapshot.forEach((doc) => {
-          news.push({ id: doc.id, ...doc.data() });
-        });
-        setNews(news);
+        const newsData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setNews(newsData);
       });
+
     return unsubscribe;
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={fetchNews} />
+      }
+    >
       {news.map((item) => {
         if (item.status !== "pending") {
           return (
@@ -97,10 +123,10 @@ const LatestNews = () => {
                 <View style={styles.data}>
                   {/* source */}
                   <Text>
-                   <Text style={styles.city}>{item.source}</Text>
+                    <Text style={styles.city}>{item.source}</Text>
                   </Text>
-                  <Text> 
-                  <Text style={styles.date}>{item.date}</Text>
+                  <Text>
+                    <Text style={styles.date}>{item.date}</Text>
                   </Text>
                 </View>
 
@@ -142,6 +168,7 @@ const LatestNews = () => {
     </ScrollView>
   );
 };
+
 export default LatestNews;
 
 const styles = StyleSheet.create({
