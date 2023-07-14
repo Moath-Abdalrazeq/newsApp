@@ -48,12 +48,11 @@ const EditProfile = () => {
       allowsEditing: true,
       quality: 1,
     });
-
-    if (!result.cancelled && result.assets.length > 0) {
+  
+    if (!result.canceled && result.assets.length > 0) {
       setNewProfileImage(result.assets[0].uri);
     }
   };
-
   const saveBio = async () => {
     try {
       const userId = firebase.auth().currentUser.uid;
@@ -144,8 +143,6 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-   
-   
   },
   addButton: {
     backgroundColor: "#2196F3",

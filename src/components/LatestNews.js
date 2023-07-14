@@ -23,7 +23,7 @@ const firebaseConfig = {
   storageBucket: "newsapp-32049.appspot.com",
   messagingSenderId: "109848058571",
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
-  measurementId: "G-KVL2B1SPCG"
+  measurementId: "G-KVL2B1SPCG",
 };
 
 // Initialize Firebase
@@ -195,12 +195,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     marginTop: 10,
+    textAlign: "right",
   },
   description: {
     fontSize: 16,
     fontWeight: "400",
     marginTop: 10,
     textDecorationLine: "underline",
+    textAlign: "right",
   },
   data: {
     flexDirection: "row",
@@ -239,6 +241,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     marginTop: 50,
+    textAlign: "right",
   },
   Modalimage: {
     width: "100%",
@@ -250,6 +253,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     lineHeight: 24,
     marginBottom: 20,
+    textAlign: "right",
   },
   closeButton: {
     backgroundColor: "#333",
@@ -257,6 +261,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     alignSelf: "flex-end",
+    marginBottom: 40,
   },
   closeButtonText: {
     color: "#fff",
@@ -269,6 +274,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginTop: 10,
-    marginLeft: 280,
+    alignSelf: "flex-end",
   },
 });
