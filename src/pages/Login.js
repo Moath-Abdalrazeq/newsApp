@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: "contain",
     marginBottom: 40,
-    marginLeft:85
+    marginLeft:90
     },
   form: {
     alignSelf: "stretch",
