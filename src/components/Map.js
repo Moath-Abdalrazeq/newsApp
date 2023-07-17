@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import { StyleSheet, View, Modal, Text, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import JeninNews from "../components/CitiesNews/JeninNews";
+import JeninLives from "../components/LiveStreams/JeninLives";
+import NablusNews from "../components/CitiesNews/NablusNews";
+import TubasNews from "../components/CitiesNews/TubasNews";
+import TulkaremNews from "../components/CitiesNews/TulkaremNews";
+const Stack = createStackNavigator();
 
 const Map = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -78,6 +85,7 @@ const Map = () => {
   };
 
   return (
+    
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={palestine}>
         {cities.map((city) => (
@@ -124,7 +132,9 @@ const Map = () => {
         </View>
       </Modal>
     </View>
+ 
   );
+  
 };
 
 const styles = StyleSheet.create({

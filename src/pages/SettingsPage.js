@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   header: {
-    backgroundColor: "#6C63FF",
+    backgroundColor: "#1048FF",
     height: 60,
     flexDirection: "row",
     alignItems: "center",
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   settingButton: {
-    backgroundColor: "#6C63FF",
+    backgroundColor: "#1048FF",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,

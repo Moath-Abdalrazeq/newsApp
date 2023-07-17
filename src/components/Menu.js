@@ -11,12 +11,13 @@ import AcceptJournalist from "./AdminWorkflow/AcceptJournalist";
 import AdminAcceptNews from "./AdminWorkflow/AdminAcceptNews";
 import ProfilePageJournalist from "../pages/profilePageJournalist";
 import ArchiveNewsPage from "./ArchiveNewsPage";
-import LiveStreamDisplay from "./LiveStreams/LiveStreamDisplay";
+import LiveStreamDisplay from "./LiveStreams/LiveStreamPage";
 import SettingsPage from "../pages/SettingsPage";
 import AboutSubMenu from "./AboutUS/AboutSubMenu";
 import Company from "./AboutUS/Company";
 import SocialMedia from "./AboutUS/SocialMedia";
 import Contants from "./AboutUS/Contants";
+ 
 const Drawer = createDrawerNavigator();
 
 const Menu = ({ user }) => {
@@ -68,6 +69,18 @@ const Menu = ({ user }) => {
               style={{ marginLeft: 10 }}
             />
             <Text style={{ fontSize: 20, marginLeft: 10 }}>Map</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ flexDirection: "row", marginBottom: 20, paddingTop: 20 }}
+            onPress={() => navigation.navigate("AddNews")}
+          >
+            <FontAwesome5
+              name="plus"
+              size={24}
+              color="black"
+              style={{ marginLeft: 10 }}
+            />
+            <Text style={{ fontSize: 20, marginLeft: 10 }}>Add News</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{ flexDirection: "row", marginBottom: 20, paddingTop: 20 }}
@@ -194,6 +207,7 @@ const Menu = ({ user }) => {
       <Drawer.Screen name="Company" component={Company} />
       <Drawer.Screen name="SocialMedia" component={SocialMedia} />
       <Drawer.Screen name="Contants" component={Contants} />
+      
     </Drawer.Navigator>
   );
 };
