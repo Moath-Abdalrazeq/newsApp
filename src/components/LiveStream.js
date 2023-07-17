@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Linking,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Linking } from "react-native";
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 import { v4 as uuidv4 } from "uuid";
@@ -13,9 +7,8 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
 
-const SERVER_URL = "http://192.168.1.104:3000";  
+const SERVER_URL = "http://192.168.1.100:3000";
 
- 
 const firebaseConfig = {
   apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
   authDomain: "newsapp-32049.firebaseapp.com",
@@ -23,7 +16,7 @@ const firebaseConfig = {
   storageBucket: "newsapp-32049.appspot.com",
   messagingSenderId: "109848058571",
   appId: "1:109848058571:web:2e5322e2a1d8251017594e",
-  measurementId: "G-KVL2B1SPCG",
+  measurementId: "G-KVL2B1SPCG"
 };
 
 if (firebase.apps.length === 0) {
@@ -56,43 +49,42 @@ export default function Livestream() {
 
   const startLivestream = async () => {
     if (isLivestreaming) return;
-
+  
     setIsLivestreaming(true);
-
+  
     try {
-      // Make a POST request to start the livestream
       const response = await fetch(`${SERVER_URL}/livestream/start`, {
         method: "POST",
       });
       if (response.ok) {
         console.log("Livestream started");
       } else {
-        console.log("Failed to start livestream");
+        throw new Error("Failed to start livestream");
       }
     } catch (error) {
-      console.log("Error starting livestream:", error);
+      console.log("Error starting livestream:", error.message);
     }
   };
-
+  
   const stopLivestream = async () => {
     if (!isLivestreaming) return;
-
+  
     setIsLivestreaming(false);
-
+  
     try {
-      // Make a POST request to stop the livestream
       const response = await fetch(`${SERVER_URL}/livestream/stop`, {
         method: "POST",
       });
       if (response.ok) {
         console.log("Livestream stopped");
       } else {
-        console.log("Failed to stop livestream");
+        throw new Error("Failed to stop livestream");
       }
     } catch (error) {
-      console.log("Error stopping livestream:", error);
+      console.log("Error stopping livestream:", error.message);
     }
   };
+  
 
   const openSettings = () => {
     Linking.openSettings();
@@ -118,29 +110,44 @@ export default function Livestream() {
   const uploadVideoToFirebaseStorage = async (fileUri) => {
     try {
       const response = await fetch(fileUri);
+      if (!response.ok) {
+        throw new Error("Failed to fetch video data");
+      }
+  
       const blob = await response.blob();
-
+  
       const storageRef = firebase.storage().ref();
       const fileRef = storageRef.child(`livestreams/${uuidv4()}.mp4`);
-
+  
       const uploadTask = fileRef.put(blob, { contentType: "video/mp4" });
-
-      // Wait for the upload to complete
-      await new Promise((resolve, reject) => {
-        uploadTask.on("state_changed", null, reject, () => {
-          resolve();
-        });
-      });
-
-      const downloadURL = await fileRef.getDownloadURL();
-
-      console.log("Video uploaded to Firebase Storage");
-      return downloadURL;
+  
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Track upload progress if needed
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload progress: ${progress}%`);
+        },
+        (error) => {
+          console.log("Error uploading video:", error);
+        },
+        async () => {
+          try {
+            const downloadURL = await fileRef.getDownloadURL();
+            console.log("Video uploaded to Firebase Storage");
+            return downloadURL;
+          } catch (error) {
+            console.log("Error getting download URL:", error);
+            return null;
+          }
+        }
+      );
     } catch (error) {
       console.log("Error uploading video to Firebase Storage:", error);
       return null;
     }
   };
+  
 
   const handleLivestream = async () => {
     if (isLivestreaming) {
@@ -159,14 +166,13 @@ export default function Livestream() {
           });
           const city = reverseGeocode[0].city;
 
-          const videoUri = `${SERVER_URL}/livestream/video.mp4`; // Replace with the actual video URI from the livestream server
+          const videoUri = `${SERVER_URL}/livestream/video.mp4`;
 
           const videoURL = await uploadVideoToFirebaseStorage(videoUri);
           if (videoURL) {
-            // Delay before saving the livestream to Firestore
             setTimeout(() => {
               saveLivestreamToFirestore(city, videoURL);
-            }, 5000); // Adjust the delay time as needed (in milliseconds)
+            }, 5000);
           }
         } catch (error) {
           console.log("Error retrieving city name:", error);
