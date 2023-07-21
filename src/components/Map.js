@@ -60,6 +60,16 @@ const Map = () => {
       newsUrl: "TulkaremNews",
       livesUrl: "TulkaremLives",
     },
+    {
+      Latitude:  31.768319,
+Longitude: 35.213710,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+      markerTitle: "Ramallah",
+      id: "Ramallah-marker",
+      newsUrl: "Ramallah",
+      livesUrl: "Ramallah",
+    },
     // Add more cities here if needed
   ];
 

@@ -21,6 +21,9 @@ import TulkaremNews from "./src/components/CitiesNews/TulkaremNews";
 import LatestNews from "./src/components/LatestNews";
 import ClientRegistration from "./src/pages/ClientRegistration";
 import JournalistRegistration from "./src/pages/JournalistRegistration";
+import BottomNavigator from './NavigatorBottomPages/JournalistNavigator';
+import AdminNavigator from "./NavigatorBottomPages/AdminNavigator";
+import ClientNavigator from "./NavigatorBottomPages/ClientNavigator";
 
 function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
@@ -109,10 +112,12 @@ function App() {
 
   if (userRole === "journalist" && userStatus === "active") {
     return (
+      
       <NavigationContainer>
+        
         <Stack.Navigator>
-          <Stack.Screen name="JournalistScreen" component={JournalistScreen} />
-          <Stack.Screen name="JeninNews" component={JeninNews} />
+        <Stack.Screen name="JournalistScreen" component={BottomNavigator} />
+           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
           <Stack.Screen name="TubasNews" component={TubasNews} />
@@ -125,7 +130,7 @@ function App() {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="ClientScreen" component={ClientScreen} />
+        <Stack.Screen name="AdminScreen" component={AdminNavigator}    />
           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
@@ -139,8 +144,8 @@ function App() {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="AdminScreen" component={AdminScreen} />
-          <Stack.Screen name="JeninNews" component={JeninNews} />
+        <Stack.Screen name="CientScreen" component={ClientNavigator}   />
+           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
           <Stack.Screen name="TubasNews" component={TubasNews} />
