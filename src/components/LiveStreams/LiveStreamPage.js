@@ -1,32 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { View , Text} from 'react-native';
-import { Video } from 'expo-av';
+import { View, Text, Button } from 'react-native';
 import { io } from 'socket.io-client';
+import { Video } from 'expo-av';
 
 const LiveStreamViewer = () => {
-  const [streamURL, setStreamURL] = useState(null);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamURL, setStreamURL] = useState('');
 
   useEffect(() => {
-    let isMounted = true;
-
-    // Set up the socket to receive the stream from the server
-    const socket = io('http://192.168.1.104:3001'); // Replace with your server URL
+    const serverURL = 'http://192.168.1.104:3001'; // Replace with your server URL
+    const socket = io(serverURL);
 
     socket.on('streamURL', (url) => {
-      if (isMounted) {
-        setStreamURL(url);
-      }
+      setStreamURL(url);
+      setIsStreaming(true);
     });
 
+    socket.on('noActiveBroadcaster', () => {
+      setIsStreaming(false);
+    });
+
+    socket.emit('watchStream');
+
     return () => {
-      isMounted = false;
+      socket.disconnect();
     };
   }, []);
 
+  const handleWatchStream = () => {
+    setIsStreaming(true);
+  };
+
   return (
-    <View >
-      <Text>sss</Text>
-      {streamURL && (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      {isStreaming ? (
         <Video
           source={{ uri: streamURL }}
           rate={1.0}
@@ -34,12 +41,17 @@ const LiveStreamViewer = () => {
           isMuted={false}
           resizeMode="cover"
           shouldPlay
-          useNativeControls
-         />
+          isLooping
+          style={{ width: 300, height: 200 }}
+        />
+      ) : (
+        <>
+          <Text>No live stream available.</Text>
+          <Button title="Watch Live Stream" onPress={handleWatchStream} />
+        </>
       )}
     </View>
   );
 };
 
- 
 export default LiveStreamViewer;
