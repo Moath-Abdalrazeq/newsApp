@@ -1,9 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "react-native-vector-icons";
-import SettingsPage from "../src/pages/SettingsPage";
-import ClientScreen from "../src/components/WorkflowScreens/ClientScreen";
-import Map from "../src/components/Map";
+import SettingsPage from "../../pages/SettingsPage";
+import ClientScreen from "../WorkflowScreens/ClientScreen";
+import Map from "../Map";
 const Tab = createBottomTabNavigator();
 
 const ClientNavigator = () => {

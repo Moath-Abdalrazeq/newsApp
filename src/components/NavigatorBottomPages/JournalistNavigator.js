@@ -1,10 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "react-native-vector-icons";
-import SettingsPage from "../src/pages/SettingsPage";
-import AdminScreen from "../src/components/WorkflowScreens/AdminScreen";
-import JournalistScreen from "../src/components/WorkflowScreens/JournalistScreen";
-import Map from "../src/components/Map";
+import SettingsPage from "../../pages/SettingsPage";
+import AdminScreen from "../WorkflowScreens/AdminScreen";
+import JournalistScreen from "../WorkflowScreens/JournalistScreen";
+import Map from "../Map";
 const Tab = createBottomTabNavigator();
 
 const ClientNavigator = () => {

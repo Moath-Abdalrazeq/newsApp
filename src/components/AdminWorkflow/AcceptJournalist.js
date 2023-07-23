@@ -104,15 +104,15 @@ const AdminDashboard = () => {
   const renderRegistrationItem = (registration) => {
     const viewCV = async () => {
       try {
-        const userDoc = await firebase
-          .firestore()
-          .collection("users")
-          .doc(registration.id)
-          .get();
+        const userDoc = await firebase.firestore().collection("users").doc(registration.id).get();
         const user = userDoc.data();
-
-        if (user.cv) {
-          Linking.openURL(user.cv);
+    
+        // Ensure that the user.cv property contains the correct file URL
+        const cvUrl = user.cv;
+    
+        // Check if the URL is valid before opening
+        if (cvUrl) {
+          await Linking.openURL(cvUrl);
         } else {
           alert("CV not available");
         }
@@ -120,6 +120,7 @@ const AdminDashboard = () => {
         alert(error.message);
       }
     };
+    
 
     return (
       <View style={styles.registrationItem} key={registration.id}>
