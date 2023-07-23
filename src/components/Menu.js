@@ -70,31 +70,37 @@ const Menu = ({ user }) => {
             />
             <Text style={{ fontSize: 20, marginLeft: 10 }}>Map</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{ flexDirection: "row", marginBottom: 20, paddingTop: 20 }}
-            onPress={() => navigation.navigate("AddNews")}
-          >
-            <FontAwesome5
-              name="plus"
-              size={24}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
-            <Text style={{ fontSize: 20, marginLeft: 10 }}>Add News</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ flexDirection: "row", marginBottom: 20, paddingTop: 20 }}
-            onPress={() => navigation.navigate("LiveStream")}
-          >
-            <FontAwesome5
-              name="stream"
-              size={24}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
-            <Text style={{ fontSize: 20, marginLeft: 10 }}>Add LiveStream</Text>
-          </TouchableOpacity>
+          {(user.isJournalist   || user.isClient)  && (
+            <>
+              <TouchableOpacity
+                style={{ marginBottom: 20, paddingTop: 20 }}
+                onPress={() => navigation.navigate("AddNews")}
+              >
+                <FontAwesome5
+                  name="plus"
+                  size={24}
+                  color="black"
+                  style={{ marginLeft: 10 }}
+                >
+                  <Text style={{ fontSize: 20 }}>Add news</Text>
+                </FontAwesome5>
+              </TouchableOpacity>
 
+              <TouchableOpacity
+                style={{ marginBottom: 20, paddingTop: 20 }}
+                onPress={() => navigation.navigate("LiveStraem")}
+              >
+                <FontAwesome5
+                  name="stream"
+                  size={24}
+                  color="black"
+                  style={{ marginLeft: 10 }}
+                >
+                  <Text style={{ fontSize: 20 }}>Add LiveStream</Text>
+                </FontAwesome5>
+              </TouchableOpacity>
+            </>
+          )}
           <TouchableOpacity
             style={{ flexDirection: "row", marginBottom: 20, paddingTop: 20 }}
             onPress={() => navigation.navigate("LiveStreamDisplay")}

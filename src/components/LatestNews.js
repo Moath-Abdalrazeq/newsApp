@@ -38,8 +38,7 @@ const LatestNews = () => {
   const [selectedNews, setSelectedNews] = useState({});
   const [refreshing, setRefreshing] = useState(false);
   const [news, setNews] = useState([]);
-
-  const toggleModal = (item) => {
+   const toggleModal = (item) => {
     setSelectedNews(item);
     setIsModalVisible(true);
   };

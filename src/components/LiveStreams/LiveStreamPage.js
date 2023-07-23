@@ -1,59 +1,57 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Video } from "expo-av";
-import io from "socket.io-client";
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button } from 'react-native';
+import { io } from 'socket.io-client';
+import { Video } from 'expo-av';
 
-const SERVER_URL = "http://192.168.1.100:3000";
-
-export default function LiveStreamViewer() {
-  const [isLivestreaming, setIsLivestreaming] = useState(false);
+const LiveStreamViewer = () => {
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamURL, setStreamURL] = useState('');
 
   useEffect(() => {
-    const socket = io(SERVER_URL);
+    const serverURL = 'http://192.168.1.104:3001'; // Replace with your server URL
+    const socket = io(serverURL);
 
-    socket.on("connect", () => {
-      console.log("Connected to server");
+    socket.on('streamURL', (url) => {
+      setStreamURL(url);
+      setIsStreaming(true);
     });
 
-    socket.on("livestreamStarted", () => {
-      console.log("Livestream started");
-      setIsLivestreaming(true);
+    socket.on('noActiveBroadcaster', () => {
+      setIsStreaming(false);
     });
 
-    socket.on("livestreamStopped", () => {
-      console.log("Livestream stopped");
-      setIsLivestreaming(false);
-    });
+    socket.emit('watchStream');
 
     return () => {
       socket.disconnect();
     };
   }, []);
 
+  const handleWatchStream = () => {
+    setIsStreaming(true);
+  };
+
   return (
-    <View style={styles.container}>
-      {isLivestreaming ? (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      {isStreaming ? (
         <Video
-          source={{ uri: `${SERVER_URL}/livestream/video` }}
-          style={styles.video}
-          useNativeControls
-          resizeMode="contain"
+          source={{ uri: streamURL }}
+          rate={1.0}
+          volume={1.0}
+          isMuted={false}
+          resizeMode="cover"
+          shouldPlay
+          isLooping
+          style={{ width: 300, height: 200 }}
         />
       ) : (
-        <Text>No livestream currently available</Text>
+        <>
+          <Text>No live stream available.</Text>
+          <Button title="Watch Live Stream" onPress={handleWatchStream} />
+        </>
       )}
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  video: {
-    width: "100%",
-    height: 300,
-  },
-});
+export default LiveStreamViewer;

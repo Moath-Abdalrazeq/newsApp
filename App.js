@@ -21,9 +21,9 @@ import TulkaremNews from "./src/components/CitiesNews/TulkaremNews";
 import LatestNews from "./src/components/LatestNews";
 import ClientRegistration from "./src/pages/ClientRegistration";
 import JournalistRegistration from "./src/pages/JournalistRegistration";
-import BottomNavigator from './NavigatorBottomPages/JournalistNavigator';
-import AdminNavigator from "./NavigatorBottomPages/AdminNavigator";
-import ClientNavigator from "./NavigatorBottomPages/ClientNavigator";
+import BottomNavigator from './src/components/NavigatorBottomPages/JournalistNavigator';
+import AdminNavigator from "./src/components/NavigatorBottomPages/AdminNavigator";
+import ClientNavigator from "./src/components/NavigatorBottomPages/ClientNavigator";
 
 function LocationDeniedScreen() {
   const handleOpenLocationSettings = () => {
@@ -144,7 +144,7 @@ function App() {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-        <Stack.Screen name="CientScreen" component={ClientNavigator}   />
+        <Stack.Screen name="AdminScreen" component={AdminScreen}   />
            <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />

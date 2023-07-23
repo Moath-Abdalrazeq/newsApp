@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Switch,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const SettingsPage = ({ navigation }) => {
-   const [userSettings, setUserSettings] = useState(null);
+  const [userSettings, setUserSettings] = useState(null);
 
   useEffect(() => {
     const currentUser = firebase.auth().currentUser;
@@ -30,8 +24,6 @@ const SettingsPage = ({ navigation }) => {
       });
     }
   }, []);
-
- 
 
   const handleLogout = () => {
     firebase.auth().signOut().then(() => {
@@ -60,13 +52,9 @@ const SettingsPage = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Settings</Text>
-        <TouchableOpacity onPress={handleViewProfile}>
-          <MaterialCommunityIcons name="account" size={28} color="#fff" />
-        </TouchableOpacity>
-      </View>
-     
+      <TouchableOpacity style={styles.settingButton} onPress={handleViewProfile}>
+        <MaterialCommunityIcons name="account" size={28} color="#fff" />
+      </TouchableOpacity>
       <TouchableOpacity style={styles.settingButton} onPress={handleChangePassword}>
         <Text style={styles.settingButtonText}>Change Password</Text>
       </TouchableOpacity>
@@ -76,41 +64,27 @@ const SettingsPage = ({ navigation }) => {
     </View>
   );
 };
-export default SettingsPage;
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F7F7F7",
+    backgroundColor: "white",
     paddingTop: 50,
-  },
-  header: {
-    backgroundColor: "#1048FF",
-    height: 60,
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-  },
-  headerText: {
-    color: "#fff",
-    fontSize: 24,
-    fontWeight: "bold",
-    marginLeft: 20,
   },
   settingButton: {
     backgroundColor: "#1048FF",
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
-    alignSelf: "center",
     marginVertical: 10,
+    alignItems: "center",
   },
   settingButtonText: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
-    textAlign: "center",
   },
 });
+
+export default SettingsPage;

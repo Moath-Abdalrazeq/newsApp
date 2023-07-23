@@ -60,7 +60,57 @@ const Map = () => {
       newsUrl: "TulkaremNews",
       livesUrl: "TulkaremLives",
     },
-    // Add more cities here if needed
+    {
+      latitude: 31.9012,
+      longitude: 35.2063,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+      markerTitle: "Ramallah",
+      id: "ramallah-marker",
+      newsUrl: "RamallahNews",   
+      livesUrl: "RamallahLives",  
+    },
+    {
+      latitude: 32.1913,
+      longitude: 34.9839,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+      markerTitle: "Qalqilya",
+      id: "qalqilya-marker",
+      newsUrl: "QalqilyaNews",  
+      livesUrl: "QalqilyaLives",  
+    },
+    {
+      latitude: 31.7043,
+      longitude: 35.2024,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+      markerTitle: "Bethlehem",
+      id: "bethlehem-marker",
+      newsUrl: "BethlehemNews",  
+      livesUrl: "BethlehemLives",  
+    },
+    {
+      latitude: 31.8562,
+      longitude: 35.4533,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+      markerTitle: "Jericho",
+      id: "jericho-marker",
+      newsUrl: "JerichoNews",  
+      livesUrl: "JerichoLives",  
+    },
+    {
+      latitude: 31.7798,
+      longitude: 35.2137,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+      markerTitle: "Jerusalem",
+      id: "jerusalem-marker",
+      newsUrl: "JerusalemNews",  
+      livesUrl: "JerusalemLives",  
+    },
+   
   ];
 
   const handleMarkerPress = (marker) => {
