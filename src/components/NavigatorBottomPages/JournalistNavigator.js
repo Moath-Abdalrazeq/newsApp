@@ -7,7 +7,7 @@ import JournalistScreen from "../WorkflowScreens/JournalistScreen";
 import Map from "../Map";
 const Tab = createBottomTabNavigator();
 
-const ClientNavigator = () => {
+const JournalistNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -45,4 +45,4 @@ const ClientNavigator = () => {
   );
 };
 
-export default ClientNavigator;
+export default JournalistNavigator;

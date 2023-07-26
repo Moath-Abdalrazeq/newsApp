@@ -123,6 +123,7 @@ function App() {
           <Stack.Screen name="TubasNews" component={TubasNews} />
           <Stack.Screen name="TulkaremNews" component={TulkaremNews} />
           <Stack.Screen name="LatestNews" component={LatestNews} />
+          
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -130,7 +131,7 @@ function App() {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-        <Stack.Screen name="AdminScreen" component={AdminNavigator}    />
+        <Stack.Screen name="ClientScreen" component={ClientNavigator}    />
           <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />
@@ -144,7 +145,7 @@ function App() {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-        <Stack.Screen name="AdminScreen" component={AdminScreen}   />
+        <Stack.Screen name="AdminScreen" component={AdminNavigator}   />
            <Stack.Screen name="JeninNews" component={JeninNews} />
           <Stack.Screen name="JeninLives" component={JeninLives} />
           <Stack.Screen name="NablusNews" component={NablusNews} />

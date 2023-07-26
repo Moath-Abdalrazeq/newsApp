@@ -88,7 +88,7 @@ const Menu = ({ user }) => {
 
               <TouchableOpacity
                 style={{ marginBottom: 20, paddingTop: 20 }}
-                onPress={() => navigation.navigate("LiveStraem")}
+                onPress={() => navigation.navigate("LiveStream")}
               >
                 <FontAwesome5
                   name="stream"
@@ -205,7 +205,7 @@ const Menu = ({ user }) => {
       <Drawer.Screen name="AddNews" component={AddNews} />
       <Drawer.Screen name="AcceptJournalist" component={AcceptJournalist} />
       <Drawer.Screen name="AdminAcceptNews" component={AdminAcceptNews} />
-      <Drawer.Screen name="LiveStream" component={LiveStream} />
+       
       <Drawer.Screen name="Profile" component={ProfilePageJournalist} />
       <Drawer.Screen name="ArchiveNewsPage" component={ArchiveNewsPage} />
       <Drawer.Screen name="LiveStreamDisplay" component={LiveStreamDisplay} />
@@ -213,6 +213,8 @@ const Menu = ({ user }) => {
       <Drawer.Screen name="Company" component={Company} />
       <Drawer.Screen name="SocialMedia" component={SocialMedia} />
       <Drawer.Screen name="Contants" component={Contants} />
+      <Drawer.Screen name="LiveStream" component={LiveStream} />
+
       
     </Drawer.Navigator>
   );
