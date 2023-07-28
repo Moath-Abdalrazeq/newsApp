@@ -13,18 +13,30 @@ import ProfilePageJournalist from "../pages/profilePageJournalist";
 import ArchiveNewsPage from "./ArchiveNewsPage";
 import LiveStreamDisplay from "./LiveStreams/LiveStreamPage";
 import SettingsPage from "../pages/SettingsPage";
-import AboutSubMenu from "./AboutUS/AboutSubMenu";
-import Company from "./AboutUS/Company";
-import SocialMedia from "./AboutUS/SocialMedia";
-import Contants from "./AboutUS/Contants";
+import AboutUs from '../components/AboutUS/AboutUs'
+
+ 
  
 const Drawer = createDrawerNavigator();
 
 const Menu = ({ user }) => {
   const [isAboutSubMenuOpen, setIsAboutSubMenuOpen] = useState(false);
 
-  const handleAboutUsPress = () => {
-    setIsAboutSubMenuOpen(!isAboutSubMenuOpen);
+ 
+  const handleChangePassword = () => {
+    firebase
+      .auth()
+      .sendPasswordResetEmail(firebase.auth().currentUser.email)
+      .then(() => {
+        alert("Password reset email sent successfully");
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
+  const handleViewProfile = () => {
+    navigation.navigate('Profile');
   };
 
   return (
@@ -130,7 +142,7 @@ const Menu = ({ user }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={{ flexDirection: "row", marginBottom: 20, paddingTop: 20 }}
-            onPress={handleAboutUsPress}
+            onPress={() => navigation.navigate("AboutUs")}
           >
             <FontAwesome5
               name="info-circle"
@@ -138,10 +150,34 @@ const Menu = ({ user }) => {
               color="black"
               style={{ marginLeft: 10 }}
             />
-            <Text style={{ fontSize: 20, marginLeft: 10 }}>About</Text>
+            <Text style={{ fontSize: 20, marginLeft: 10 }}>About Us</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ flexDirection: "row", marginBottom: 20, paddingTop: 20 }}
+            onPress={handleViewProfile}
+          >
+            <FontAwesome5
+              name="info-circle"
+              size={24}
+              color="black"
+              style={{ marginLeft: 10 }}
+            />
+            <Text style={{ fontSize: 20, marginLeft: 10 }}>Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ flexDirection: "row", marginBottom: 20, paddingTop: 20 }}
+            onPress={handleChangePassword}
+          >
+            <FontAwesome5
+              name="info-circle"
+              size={24}
+              color="black"
+              style={{ marginLeft: 10 }}
+            />
+            <Text style={{ fontSize: 20, marginLeft: 10 }}>Change Password</Text>
           </TouchableOpacity>
 
-          {isAboutSubMenuOpen && <AboutSubMenu navigation={navigation} />}
+          
 
           <TouchableOpacity
             style={{ flexDirection: "row", marginBottom: 20, paddingTop: 20 }}
@@ -205,15 +241,17 @@ const Menu = ({ user }) => {
       <Drawer.Screen name="AddNews" component={AddNews} />
       <Drawer.Screen name="AcceptJournalist" component={AcceptJournalist} />
       <Drawer.Screen name="AdminAcceptNews" component={AdminAcceptNews} />
+      <Drawer.Screen name="AboutUs" component={AboutUs} />
+
        
       <Drawer.Screen name="Profile" component={ProfilePageJournalist} />
       <Drawer.Screen name="ArchiveNewsPage" component={ArchiveNewsPage} />
       <Drawer.Screen name="LiveStreamDisplay" component={LiveStreamDisplay} />
       <Drawer.Screen name="SettingsPage" component={SettingsPage} />
-      <Drawer.Screen name="Company" component={Company} />
-      <Drawer.Screen name="SocialMedia" component={SocialMedia} />
-      <Drawer.Screen name="Contants" component={Contants} />
-      <Drawer.Screen name="LiveStream" component={LiveStream} />
+         <Drawer.Screen name="LiveStream" component={LiveStream} />
+        
+
+
 
       
     </Drawer.Navigator>

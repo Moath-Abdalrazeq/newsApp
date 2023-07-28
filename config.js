@@ -5,7 +5,6 @@ import 'firebase/compat/auth'
  
 import 'firebase/compat/firestore'
  
-// youre web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
   authDomain: "newsapp-32049.firebaseapp.com",
