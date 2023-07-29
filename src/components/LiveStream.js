@@ -68,7 +68,7 @@ const LiveStream = () => {
       return;
     }
 
-    const serverURL = 'http://192.168.0.105:3001'; // Replace with your server URL
+    const serverURL = 'http://192.168.0.105:3001';  
     socketRef.current = io(serverURL);
     socketRef.current.on('connect', () => {
       console.log('Socket connected, starting stream...');

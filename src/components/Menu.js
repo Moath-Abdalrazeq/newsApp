@@ -20,7 +20,7 @@ import AboutUs from '../components/AboutUS/AboutUs'
 const Drawer = createDrawerNavigator();
 
 const Menu = ({ user }) => {
-  const [isAboutSubMenuOpen, setIsAboutSubMenuOpen] = useState(false);
+
 
  
   const handleChangePassword = () => {

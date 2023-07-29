@@ -15,7 +15,6 @@ import { useNavigation } from "@react-navigation/native";
 import { firebase } from "../../config";
 import * as WebBrowser from "expo-web-browser";
 import { makeRedirectUri } from "expo-auth-session";
-import { AuthSession } from "expo";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA4RQu33i_jcHvtzq50w9rrTSJ_ZncGE3Q",
@@ -32,8 +31,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+     firebase.initializeApp(firebaseConfig);
   }, []);
 
   const loginUser = async (email, password) => {
@@ -49,29 +47,24 @@ const Login = () => {
       const redirectUri = makeRedirectUri({ useProxy: true });
       const clientId = "812261680460378";
 
-      // Build the authorization URL
-      const authUrl =
+       const authUrl =
         `https://www.facebook.com/v12.0/dialog/oauth?` +
         `client_id=${clientId}` +
         `&redirect_uri=${encodeURIComponent(redirectUri)}` +
         `&response_type=token` +
         `&scope=${encodeURIComponent("public_profile,email")}`;
 
-      // Open the Facebook login page in the browser
-      const { type, params } = await WebBrowser.openAuthSessionAsync(
+       const { type, params } = await WebBrowser.openAuthSessionAsync(
         authUrl,
         redirectUri
       );
 
       if (type === "success") {
-        // Extract the access token from the response parameters
         const { access_token } = params;
 
-        // Create a Facebook credential
         const credential =
           firebase.auth.FacebookAuthProvider.credential(access_token);
 
-        // Sign in with the obtained credential
         await firebase.auth().signInWithCredential(credential);
       } else if (type === "cancel") {
         console.log("Facebook login cancelled");

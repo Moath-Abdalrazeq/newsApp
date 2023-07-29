@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F5F5F5",
-    paddingHorizontal: 20, // Add some horizontal padding for better spacing
+    paddingHorizontal: 20, 
   },
   title: {
     fontSize: 36,
@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#026EFD",
-    width: "80%", // Use percentage instead of fixed width for better responsiveness
+    width: "80%",  
     height: 60,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 10, // Use marginVertical for better spacing between buttons
+    marginVertical: 10,  
     shadowColor: "#026EFD",
     shadowOpacity: 0.5,
     shadowRadius: 10,
